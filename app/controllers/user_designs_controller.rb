@@ -1,0 +1,2 @@
+class UserDesignsController < ApplicationController
+end
