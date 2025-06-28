@@ -26,7 +26,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_092353) do
   create_table "orders", force: :cascade do |t|
     t.bigint "product_id", null: false
     t.bigint "user_id", null: false
-    t.boolean "finished"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_orders_on_product_id"
@@ -35,10 +34,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_092353) do
 
   create_table "products", force: :cascade do |t|
     t.string "name"
+    t.string "SKU"
     t.string "description"
     t.string "category"
-    t.string "material"
     t.string "image_url"
+    t.string "cloudinary_template_url"
     t.float "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -46,9 +46,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_092353) do
 
   create_table "user_designs", force: :cascade do |t|
     t.string "cloudinary_url"
+    t.string "user_text"
     t.bigint "product_id", null: false
     t.bigint "user_id", null: false
     t.bigint "order_id", null: false
+    t.boolean "finished"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_user_designs_on_order_id"
