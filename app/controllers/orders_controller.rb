@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
 
 
   def index
-    @orders = Order.All
+    @orders = Order.all
   end
 
   def show
@@ -14,8 +14,8 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @orer = Order.new(order_params)
-    if @order.save!
+    @order = Order.new(order_params)
+    if @order.save
       redirect_to orders_path, notice: "Order created!"
     else
       render :new, status: :unprocessable_entity
@@ -26,11 +26,16 @@ class OrdersController < ApplicationController
   end
 
   def update
+    if @order.update(order_params)
+      redirect_to order_path(@order), notice: "Order updated!"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
     @order.destroy
-    redirect_to orders_path, status: :set_order
+    redirect_to orders_path, status: :see_other, notice: "Order deleted!"
   end
 
   private
@@ -40,6 +45,6 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:finished)
+    params.require(:order).permit(:status, :user_id)
   end
 end

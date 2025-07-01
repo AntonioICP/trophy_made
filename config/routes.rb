@@ -12,8 +12,10 @@ Rails.application.routes.draw do
   resources :products, only: %i[index show] do
     resources :orders, only: %i[new create]
     resources :user_designs, only: %i[new create]
+    resources :order_items, only: %i[new create]
   end
 
+  resources :order_items, only: %i[index show edit update destroy]
   resources :orders, only: %i[index show edit update destroy]
   resources :user_designs, only: %i[index show edit update destroy]
 end
