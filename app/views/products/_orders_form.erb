@@ -1,6 +1,5 @@
-<%= simple_form_for OrderItem.new, url: order_items_path, method: :post, html: { class: "d-inline" } do |f| %>
+<%= simple_form_for [product, OrderItem.new], method: :post, html: { class: "d-inline" } do |f| %>
   <%= f.input :product_id, as: :hidden, input_html: { value: product.id } %>
-  <%= f.input :order_id, as: :hidden, input_html: { value: order.id } %>
   <%= f.input :quantity, as: :hidden, input_html: { value: 1 } %>
 
   <%= f.button :submit, "Add to Cart", class: "btn btn-primary btn-sm" %>
