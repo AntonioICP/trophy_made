@@ -13,11 +13,11 @@
       <li class="nav-item">
         <!-- In your navbar, next to Login -->
           <button type="button"
-                  class="btn btn-outline-light border border-white rounded d-flex align-items-center justify-content-center"
+                  class="btn-icon"
                   style="width: 36px; height: 36px;"
                   data-action="search-toggle#toggle"
                   title="Search">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass text-white"></i>
           </button>
       </li>
 
@@ -37,7 +37,7 @@
         </li>
       <% else %>
         <li class="nav-item">
-          <%= link_to "Login", new_user_session_path, class: "nav-link" %>
+          <%= link_to "Login", new_user_session_path, class: "nav-link text-white" %>
         </li>
       <% end %>
     </ul>
@@ -48,8 +48,8 @@
     <div class="container py-3">
       <%= form_with url: products_path, method: :get, class: "d-flex" do %>
         <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control me-2 text-white bg-transparent border-0 border-bottom rounded-0 placeholder-white" %>
-        <%= button_tag type: "submit", class: "btn btn-outline-light" do %>
-          <i class="fa-solid fa-magnifying-glass"></i>
+        <%= button_tag type: "submit", class: "btn-icon" do %>
+          <i class="fa-solid fa-magnifying-glass text-white"></i>
         <% end %>
       <% end %>
     </div>
