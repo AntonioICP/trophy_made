@@ -1,20 +1,55 @@
-<div class="justify-content-center text-center">
-  <h1>Products</h1>
-</div>
-<div class="col-12 col-lg-8">
-  <div class="cards">
-    <% @products.each do |product| %>
-      <%= link_to product_path(product), class: "text-decoration-none text-dark", data: { marker_id: product.id } do %>
-        <div class="card-trip">
-          <img src="<%= product.image_url %>" alt="<%= product.name %>" />
-          <div class="card-trip-infos d-flex justify-content-between align-items-center">
-            <div>
-              <h2><%= product.name %></h2>
+<div class="container-fluid px-4">
+  <div class="row">
+    <!-- LEFT SIDEBAR FILTERS -->
+    <aside class="col-lg-3 mb-4">
+      <h5 class="fw-bold">Filter</h5>
+      <div class="accordion" id="filtersAccordion">
+        <% ["Sports", "Material", "Price"].each_with_index do |filter, i| %>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading<%= i %>">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= i %>">
+                <%= filter %>
+              </button>
+            </h2>
+            <div id="collapse<%= i %>" class="accordion-collapse collapse" data-bs-parent="#filtersAccordion">
+              <div class="accordion-body">
+                <p>Example filter options here</p>
+              </div>
             </div>
-            <h2 class="card-trip-pricing">$<%= product.price %></h2>
           </div>
+        <% end %>
+      </div>
+    </aside>
+
+    <!-- PRODUCT GRID -->
+    <section class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="mb-0">Showing <%= @products.size %> of <%= Product.count %> results</p>
+        <div>
+          <label for="sort-select" class="me-2">Sort by</label>
+          <select id="sort-select" class="form-select d-inline-block w-auto">
+            <option>Default sorting</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
+          </select>
         </div>
-      <% end %>
-    <% end %>
+      </div>
+
+      <div class="cards-grid">
+        <% @products.each do |product| %>
+          <%= link_to product_path(product), class: "text-decoration-none text-dark" do %>
+            <div class="card-trip">
+              <div class="image-wrapper">
+                <img src="<%= product.image_url %>" alt="<%= product.name %>">
+              </div>
+              <div class="card-trip-infos">
+                <h2><%= product.name %></h2>
+                <p>Unit price from $<%= product.price %></p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
   </div>
 </div>

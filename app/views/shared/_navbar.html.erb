@@ -1,54 +1,57 @@
-<div class="navbar navbar-expand-sm navbar-light navbar-lewagon">
+<div class="navbar navbar-expand-sm navbar-light navbar-lewagon position-relative" data-controller="search-toggle">
   <div class="container-fluid">
     <%= link_to "/", class: "navbar-brand" do %>
-      <%= image_tag "https://img.freepik.com/free-vector/trophy_78370-345.jpg?semt=ais_hybrid&w=740" %>
+      <%= image_tag "TrophyMade-Logo-Primary-Reversed.png" %>
     <% end %>
-
-  <!-- Center: Search bar -->
-  <div class="flex-grow-1 mx-3" style="max-width: 700px;">
-    <div data-controller="autocomplete" class="position-relative w-100">
-      <%= form_with url: products_path, method: :get, class: "d-flex search-pill" do %>
-        <%= text_field_tag :query,
-                          params[:query],
-                          placeholder: "Type a keyword",
-                          class: "form-control rounded-start-pill border-end-0",
-                          data: { autocomplete_target: "input", action: "input->autocomplete#search" } %>
-        <%= button_tag type: "submit", class: "btn btn-primary rounded-end-pill border-start-0" do %>
-          <i class="fa-solid fa-magnifying-glass"></i>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
-        <% if user_signed_in? %>
-          <%# <li class="nav-item active">
-            <%= link_to "Home", "#", class: "nav-link" %>
-          <%# </li> %>
-          <li class="nav-item">
-            <%= link_to "My Cart", "#", class: "nav-link" %>
-          </li>
-          <li class="nav-item dropdown">
+    <!-- Search Toggle Button (white, next to login) -->
+    <ul class="navbar-nav ms-auto d-flex align-items-center gap-2">
+      <li class="nav-item">
+        <!-- In your navbar, next to Login -->
+          <button type="button"
+                  class="btn btn-outline-light border border-white rounded d-flex align-items-center justify-content-center"
+                  style="width: 36px; height: 36px;"
+                  data-action="search-toggle#toggle"
+                  title="Search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+      </li>
+
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to "My Cart", "#", class: "nav-link" %>
+        </li>
+        <li class="nav-item dropdown">
           <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <%= image_tag "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg", class: "avatar", alt: "dropdown menu" %>
           </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Action", "#", class: "dropdown-item" %>
-              <%= link_to "Another action", "#", class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
-            </div>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "nav-link" %>
-          </li>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <%= link_to "Action", "#", class: "dropdown-item" %>
+            <%= link_to "Another action", "#", class: "dropdown-item" %>
+            <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+          </div>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to "Login", new_user_session_path, class: "nav-link" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <!-- Dropdown Search Bar (hidden by default) -->
+  <div class="w-100 position-absolute top-100 start-0 d-none" data-search-toggle-target="bar" style="background-color: #208AAE; z-index: 1050;">
+    <div class="container py-3">
+      <%= form_with url: products_path, method: :get, class: "d-flex" do %>
+        <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control me-2 text-white bg-transparent border-0 border-bottom rounded-0 placeholder-white" %>
+        <%= button_tag type: "submit", class: "btn btn-outline-light" do %>
+          <i class="fa-solid fa-magnifying-glass"></i>
         <% end %>
-      </ul>
+      <% end %>
     </div>
   </div>
 </div>

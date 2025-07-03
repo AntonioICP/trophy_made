@@ -7,6 +7,11 @@ class OrdersController < ApplicationController
   end
 
   def show
+    if @order.session_id == session[:session_id]
+      @order
+    else
+      redirect_to root_path, notice: "Not your order!"
+    end
   end
 
   def new
