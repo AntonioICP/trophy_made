@@ -27,6 +27,25 @@
   height: 320px; // image box height
   padding: 16px;
   display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: relative;
+}
+
+.card-trip-infos .card-trip-user {
+  position: absolute;
+  right: 16px;
+  top: -20px;
+  width: 40px;
+}
+
+
+.cards {
+  display: grid;
+  grid-template-columns: 0.8fr 0.8fr 0.8fr;
+  gap: 0;
+  margin: 20px;
+  place-items: center;
   justify-content: center;
   align-items: center;
 }
@@ -52,4 +71,31 @@
   font-size: 14px;
   opacity: 0.75;
   margin: 0;
+}
+
+.card-category {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  //
+  // box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  width: 250px;
+  text-align: center;
+}
+
+.card-image {
+  background-size: contain;
+  background-position: center;
+  height: 180px;
+  background-repeat: no-repeat;
+  border-radius: 20%;
+}
+
+.card-text {
+  // color: black;
+  // font-size: 24px;
+  font-weight: bold;
+  // text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  margin-top: 8px;
+  font-size: 1.2rem;
 }
