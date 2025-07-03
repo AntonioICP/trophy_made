@@ -43,8 +43,13 @@
 
 .cards {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 16px;
+  grid-template-columns: 0.8fr 0.8fr 0.8fr;
+  gap: 0;
+  margin: 20px;
+  place-items: center;
+  // display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 // Smallest device
@@ -80,4 +85,31 @@
   .cards {
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+.card-category {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  //
+  // box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  width: 250px;
+  text-align: center;
+}
+
+.card-image {
+  background-size: contain;
+  background-position: center;
+  height: 180px;
+  background-repeat: no-repeat;
+  border-radius: 20%;
+}
+
+.card-text {
+  // color: black;
+  // font-size: 24px;
+  font-weight: bold;
+  // text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  margin-top: 8px;
+  font-size: 1.2rem;
 }
