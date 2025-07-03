@@ -24,11 +24,11 @@
 }
 
 .image-wrapper {
-  height: 320px; // image box height
+  height: 320px;
   padding: 16px;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: center;     // center horizontally
+  align-items: flex-start;     // align to top
   position: relative;
 }
 
