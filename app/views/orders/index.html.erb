@@ -1,3 +1,5 @@
 <% @orders.each do |order| %>
   <%= order  %>
 <% end %>
+
+<%= render "checkout", product: @product, order: @order %>
