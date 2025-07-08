@@ -7,18 +7,32 @@ class OrderItemsController < ApplicationController
     order = current_order || Order.create(user: current_user, status: "pending")
     @product = Product.find(order_item_params[:product_id])
 
-
     @order_item = OrderItem.new
     @order_item.order = order
     @order_item.product = @product
     @order_item.quantity = order_item_params[:quantity].to_i
 
     if @order_item.save
-      session[:order_id] = order.id unless current_user # persist for guests
-      redirect_to order_path(order), notice: "Added to cart!"
+      session[:order_id] = order.id unless current_user
+      redirect_to cart_path, notice: "Added to cart!"
     else
       redirect_back fallback_location: root_path, alert: "Could not add item."
     end
+  end
+
+  def update
+    @order_item = OrderItem.find(params[:id])
+    if @order_item.update(quantity: params[:order_item][:quantity])
+      redirect_to cart_path, notice: "Quantity updated."
+    else
+      redirect_to cart_path, alert: "Could not update item."
+    end
+  end
+
+  def destroy
+    @order_item = OrderItem.find(params[:id])
+    @order_item.destroy
+    redirect_to cart_path, notice: "Item removed from cart."
   end
 
   private

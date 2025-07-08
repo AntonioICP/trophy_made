@@ -9,13 +9,16 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  get 'cart', to: 'cart#show', as: :cart
+
   resources :products, only: %i[index show] do
     resources :orders, only: %i[new create]
     resources :user_designs, only: %i[new create]
     resources :order_items, only: %i[new create]
   end
 
-  resources :order_items, only: %i[index show edit update destroy]
+  resources :order_items, only: [:index, :show, :edit, :update, :destroy]
   resources :orders, only: %i[index show edit update destroy]
   resources :user_designs, only: %i[index show edit update destroy]
 end
