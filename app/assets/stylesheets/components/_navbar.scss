@@ -39,3 +39,9 @@
   border: none;
   background: transparent;
 }
+
+
+::placeholder {
+  color: white !important;
+  opacity: 0.7;
+}
