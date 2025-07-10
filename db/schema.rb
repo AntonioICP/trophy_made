@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_26_092353) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_08_094545) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "corporate_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "corporate_categories_products", id: false, force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "corporate_category_id", null: false
+  end
+
+  create_table "materials", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "materials_products", id: false, force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "material_id", null: false
+  end
 
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id", null: false
@@ -33,14 +55,59 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_092353) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
-  create_table "products", force: :cascade do |t|
+  create_table "product_styles", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "product_styles_products", id: false, force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "product_style_id", null: false
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.integer "database_id"
     t.string "SKU"
-    t.string "description"
-    t.string "category"
+    t.string "name"
+    t.text "description"
+    t.integer "parent_id"
+    t.string "colour_value"
+    t.string "size_value"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "stock_status"
+    t.integer "stock_quantity"
     t.string "image_url"
-    t.string "cloudinary_template_url"
-    t.float "price"
+    t.string "slug"
+    t.string "product_type"
+    t.decimal "weight", precision: 6, scale: 2
+    t.decimal "length", precision: 6, scale: 2
+    t.decimal "width", precision: 6, scale: 2
+    t.decimal "height", precision: 6, scale: 2
+    t.string "customiser_template"
+    t.string "background_colour"
+    t.string "personalisation_options"
+    t.bigint "quality_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["SKU"], name: "index_products_on_SKU", unique: true
+    t.index ["quality_id"], name: "index_products_on_quality_id"
+    t.index ["slug"], name: "index_products_on_slug"
+  end
+
+  create_table "products_sports", id: false, force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "sport_id", null: false
+  end
+
+  create_table "qualities", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sports", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -74,6 +141,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_092353) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "users"
+  add_foreign_key "products", "qualities"
   add_foreign_key "user_designs", "orders"
   add_foreign_key "user_designs", "products"
   add_foreign_key "user_designs", "users"
