@@ -1,66 +1,79 @@
+<!-- ANNOUNCEMENT BAR -->
+<section class="announcement-bar">
+  <p class="mb-0">Order online today, <%= Time.current.strftime("%-d %B %Y") %> and we'll dispatch your order by <%= (Time.current + 7.days).strftime("%-d %B %Y") %>. <small>*Conditions apply</small></p>
+</section>
 
-<div class="navbar navbar-expand-sm navbar-light navbar-lewagon position-relative" data-controller="search-toggle">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-sm navbar-dark py-3 sticky-top" style="background-color: #0D2149;" data-controller="search-toggle">
   <div class="container-fluid">
-    <%= link_to "/", class: "navbar-brand" do %>
-      <%= image_tag "TrophyMade-Logo-Primary-Reversed.png" %>
+
+    <!-- Logo -->
+    <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+      <%= image_tag "TrophyMade-Logo-Primary-Reversed.png", height: "50", alt: "TrophyMade Logo" %>
     <% end %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Search Toggle Button (white, next to login) -->
-    <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
-      <li class="nav-item">
-        <button type="button"
-                class="btn-icon"
-                style="width: 36px; height: 36px;"
-                data-action="search-toggle#toggle"
-                title="Search">
-          <i class="fa-solid fa-magnifying-glass text-white"></i>
-        </button>
-      </li>
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
 
-      <!-- Cart Icon -->
-      <li class="nav-item">
-        <%= link_to cart_path, class: "position-relative text-white" do %>
-          <i class="fa-solid fa-cart-shopping"></i>
-          <% if current_order&.order_items&.any? %>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
-              <%= current_order.order_items.sum(&:quantity) %>
-            </span>
-          <% end %>
-        <% end %>
-      </li>
-
-      <% if user_signed_in? %>
-        <li class="nav-item dropdown">
-          <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= image_tag "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg", class: "avatar", alt: "dropdown menu" %>
-          </a>
-          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <%= link_to "Action", "#", class: "dropdown-item" %>
-            <%= link_to "Another action", "#", class: "dropdown-item" %>
-            <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
-          </div>
-        </li>
-      <% else %>
+        <!-- Search -->
         <li class="nav-item">
-          <%= link_to "Login", new_user_session_path, class: "nav-link text-white" %>
+          <button type="button"
+                  class="btn-icon text-white"
+                  style="width: 36px; height: 36px;"
+                  data-action="search-toggle#toggle"
+                  title="Search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
         </li>
-      <% end %>
-    </ul>
+
+        <!-- Cart -->
+        <li class="nav-item">
+          <%= link_to cart_path, class: "text-white position-relative" do %>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <% if current_order&.order_items&.any? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark" style="font-size: 0.65rem;">
+                <%= current_order.order_items.sum(&:quantity) %>
+              </span>
+            <% end %>
+          <% end %>
+        </li>
+
+        <!-- User -->
+        <% if user_signed_in? %>
+          <li class="nav-item dropdown">
+            <a href="#" id="navbarDropdown" class="avatar dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg", class: "avatar rounded-circle", height: "32", alt: "Avatar" %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <%= link_to "Profile", "#", class: "dropdown-item" %>
+              <%= link_to "Orders", "#", class: "dropdown-item" %>
+              <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+            </ul>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "Login", new_user_session_path, class: "nav-link text-white" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 
-  <!-- Dropdown Search Bar (hidden by default) -->
-  <div class="w-100 position-absolute top-100 start-0 d-none" data-search-toggle-target="bar" style="background-color: #208AAE; z-index: 1050;">
+  <!-- SEARCH BAR DROPDOWN -->
+  <div class="w-100 position-absolute top-100 start-0 d-none shadow" data-search-toggle-target="bar" style="background-color: white; z-index: 1050;">
     <div class="container py-3">
       <%= form_with url: products_path, method: :get, class: "d-flex" do %>
-        <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control me-2 text-white bg-transparent border-0 border-bottom rounded-0 placeholder-white", style: "color: white;" %>
-        <%= button_tag type: "submit", class: "btn-icon" do %>
-          <i class="fa-solid fa-magnifying-glass text-white"></i>
+        <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control me-2 border-bottom rounded-0", style: "background: transparent;" %>
+        <%= button_tag type: "submit", class: "btn btn-dark" do %>
+          <i class="fa-solid fa-magnifying-glass"></i>
         <% end %>
       <% end %>
     </div>
   </div>
-</div>
+</nav>
