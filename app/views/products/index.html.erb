@@ -1,25 +1,115 @@
 <div class="container-fluid px-4">
   <div class="row">
     <!-- LEFT SIDEBAR FILTERS -->
-    <aside class="col-lg-3 mb-4">
-      <h5 class="fw-bold">Filter</h5>
-      <div class="accordion" id="filtersAccordion">
-        <% ["Sports", "Material", "Price"].each_with_index do |filter, i| %>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="heading<%= i %>">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= i %>">
-                <%= filter %>
-              </button>
-            </h2>
-            <div id="collapse<%= i %>" class="accordion-collapse collapse" data-bs-parent="#filtersAccordion">
-              <div class="accordion-body">
-                <p>Example filter options here</p>
-              </div>
-            </div>
-          </div>
+    <aside class="col-lg-3 mb-4 filter-sidebar">
+  <h5 class="fw-bold d-flex justify-content-between align-items-center">
+    Filter
+    <%= link_to "Clear All", products_path, class: "btn-clear" %>
+  </h5>
+
+  <div class="active-filters mb-3">
+  <% if params[:sport_ids].present? %>
+    <% Array(params[:sport_ids]).each do |sport_id| %>
+      <% sport = Sport.find(sport_id) %>
+      <span class="filter-tag">
+        <%= sport.name %>
+        <%= link_to remove_filter_path(:sport_ids, sport_id), class: "remove-filter" do %>
+          &times;
         <% end %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <% if params[:material_ids].present? %>
+    <% Array(params[:material_ids]).each do |material_id| %>
+      <% material = Material.find(material_id) %>
+      <span class="filter-tag">
+        <%= material.name %>
+        <%= link_to remove_filter_path(:material_ids, material_id), class: "remove-filter" do %>
+          &times;
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <% if params[:min_price].present? %>
+    <span class="filter-tag">
+      Min: $<%= params[:min_price] %>
+      <%= link_to remove_filter_path(:min_price), class: "remove-filter" do %>
+        &times;
+      <% end %>
+    </span>
+  <% end %>
+
+  <% if params[:max_price].present? %>
+    <span class="filter-tag">
+      Max: $<%= params[:max_price] %>
+      <%= link_to remove_filter_path(:max_price), class: "remove-filter" do %>
+        &times;
+      <% end %>
+    </span>
+  <% end %>
+</div>
+
+  <%= form_with url: products_path, method: :get, local: true, data: { controller: "filter" } do |f| %>
+
+<!-- Material Filter -->
+<div class="filter-group mb-3 my-4">
+  <a data-bs-toggle="collapse" href="#collapseMaterials" class="text-decoration-none d-flex align-items-center"
+     data-section="materials">
+    Material <span class="ms-auto arrow">&#9654;</span>
+  </a>
+  <div class="collapse <%= 'show' if params[:open_sections]&.include?('materials') %>" id="collapseMaterials">
+    <% @materials.each do |material| %>
+      <div class="form-check">
+        <%= check_box_tag "material_ids[]", material.id, Array(params[:material_ids]).include?(material.id.to_s), id: "material_#{material.id}", class: "filter-checkbox" %>
+        <%= label_tag "material_#{material.id}", material.name %>
       </div>
-    </aside>
+    <% end %>
+  </div>
+</div>
+
+    <!-- Sport Filter -->
+    <div class="filter-group mb-3">
+  <a data-bs-toggle="collapse" href="#collapseSports" class="text-decoration-none d-flex align-items-center"
+     data-section="sports">
+    Sport <span class="ms-auto arrow">&#9654;</span>
+  </a>
+  <div class="collapse <%= 'show' if params[:open_sections]&.include?('sports') %>" id="collapseSports">
+    <% @sports.each do |sport| %>
+      <div class="form-check">
+        <%= check_box_tag "sport_ids[]", sport.id, Array(params[:sport_ids]).include?(sport.id.to_s), id: "sport_#{sport.id}", class: "filter-checkbox" %>
+        <%= label_tag "sport_#{sport.id}", sport.name %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Price Range Filter -->
+<div class="filter-group mb-3">
+  <a data-bs-toggle="collapse" href="#collapsePriceRange" class="text-decoration-none d-flex align-items-center"
+     data-section="price">
+    Price Range <span class="ms-auto arrow">&#9654;</span>
+  </a>
+  <div class="collapse <%= 'show' if params[:open_sections]&.include?('price') %>" id="collapsePriceRange">
+    <div class="d-flex my-3">
+      <%= f.number_field :min_price,
+          value: params[:min_price],
+          placeholder: "Min",
+          class: "form-control me-2 price-input",
+          id: "min-price-input" %>
+      <%= f.number_field :max_price,
+          value: params[:max_price],
+          placeholder: "Max",
+          class: "form-control price-input",
+          id: "max-price-input" %>
+    </div>
+  </div>
+</div>
+  <% end %>
+</aside>
+
+
 
     <!-- PRODUCT GRID -->
     <section class="col-lg-9">

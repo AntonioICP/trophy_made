@@ -1,0 +1,130 @@
+.filter-sidebar {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.filter-group {
+  margin-bottom: 1.5rem;
+}
+
+.filter-group h6 {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.btn-clear {
+  font-size: 0.875rem;
+  color: #666;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.arrow {
+  transition: transform 0.2s ease;
+}
+
+.collapse.show + .arrow,
+[aria-expanded="true"] .arrow {
+  transform: rotate(90deg);
+}
+
+.price-input {
+  font-size: 0.9rem;
+  padding: 8px 12px;
+
+  &:focus {
+    border-color: #898a8a;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  &::placeholder {
+    color: #333 !important;
+    font-size: 0.85rem;
+    opacity: 1; // Firefox fix
+  }
+}
+
+// Collapsible menu links styling
+.filter-group a {
+  color: #000 !important; // Black text like "Filter"
+  font-weight: 500;
+  text-decoration: none !important;
+
+  &:hover {
+    color: #333 !important; // Slightly lighter on hover
+  }
+
+  &:focus {
+    color: #000 !important;
+    outline: none;
+  }
+}
+
+// Horizontal line between filter groups
+.filter-group {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0; // Light gray line
+
+  &:last-child {
+    border-bottom: none; // Remove line from last item
+    padding-bottom: 0;
+  }
+}
+
+// Arrow styling to match black theme
+.arrow {
+  transition: transform 0.2s ease;
+  color: #000; // Black arrow
+  font-size: 0.9rem;
+}
+
+// Arrow rotation when expanded
+a[aria-expanded="true"] .arrow {
+  transform: rotate(90deg);
+}
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+
+  .filter-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #e9ecef;
+      border-color: #adb5bd;
+    }
+
+    .remove-filter {
+      margin-left: 8px;
+      color: #6c757d;
+      text-decoration: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: 3px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #dc3545;
+        background-color: #f8d7da;
+      }
+    }
+  }
+}
