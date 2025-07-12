@@ -17,17 +17,62 @@
   <%= render "orders_form", product: @product, order: @order %>
 </div>
 
+<div class="d-flex justify-content-center align-items-center">
+  <h1>Design your award with TrophyMaker</h1>
+</div>
+
 <div class="d-flex justify-content-center align-items-center" style="margin: 30px;">
-  <div class="col-12 col-lg-8">
-    <h1>Design your award with TrophyMaker</h1>
-    <div class="card-trip-show shadow">
-      <img src="<%= @product.cloudinary_template_url %>" alt="<%= @product.name %>" class="w-100" style="height: 500px; object-fit: contain;" />
-      <div class="card-trip-infos d-flex justify-content-between align-items-center p-3">
-        <div>
-          <p>Click and drag to move your elements around the trophype
-              Engraving area is within the red border</p>
+  <div class="col-sw-2 col-6">
+    <div class="row">
+      <div class="column">Text</div>
+        <div class="column"><input type="text" id="text" value="Type here"></div>
+    </div>
+
+    <div class="row">
+      <div class="column">Diameter</div>
+        <div class="column"><input type="range" id="diameter" min="100" max="2500" value="250" step="1"></div>
+    </div>
+
+    <div class="row">
+      <div class="column">Font size</div>
+        <div class="column"><input type="range" id="fontSize" min="8" max="100" value="24" step="1"></div>
+    </div>
+
+    <div class="row">
+      <div class="column">Letter separation</div>
+        <div class="column"><input type="range" id="kerning" min="-10" max="10" value="0" step="1"></div>
+    </div>
+
+    <div class="row">
+      <div class="column">Flip</div>
+        <div class="column"><input type="checkbox" id="flip" value="1"></div>
+    </div>
+
+    <div class="row">
+      <div class="column"><button class="button" type="button" id="newObject">Add to Canvas</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+      <button class="button" type="button" onclick="deleteItem(this)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sw-12 col-6">
+  <p>Click and drag to move your elements around the trophy.
+    Engraving area is within the red border</p>
+    <div class="row">
+      <div class="product-image">
+        <div class="canvasContainer">
+          <img class="img-design" src="<%= @product.cloudinary_template_url %>"/>
+          <canvas id="canvas1" height="1000px" width="1000px"></canvas>
         </div>
       </div>
     </div>
   </div>
+  </div>
 </div>
+
+  <%# <img src="<%= @product.cloudinary_template_url" alt="<%= @product.name %>
+  <%# class="w-100" style="height: 500px; object-fit: contain;" /> %>

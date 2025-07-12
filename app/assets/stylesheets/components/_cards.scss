@@ -100,6 +100,48 @@
   font-size: 1.2rem;
 }
 
-.card-trip-show {
+body, input, button {
+	font: 12pt Arial, Helvetica;
+}
 
+.canvasContainer {
+	border: 2px solid #f5f4f4;
+	display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+input[type=range], input[type=text] {
+	width: 200px;
+}
+
+.product-image {
+  min-width: 500px;
+  // background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.img-design {
+  height: 100vh;
+  z-index: 0;
+  position: absolute;
+}
+
+.canvas1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 100vh;
+  width: 500px;
+}
+
+.column {
+  display: flex;
+  justify-content: center;  /* Horizontal */
+  align-items: flex-start;      /* Vertical */
+  height: 100%;
+  margin: 5px;
 }
