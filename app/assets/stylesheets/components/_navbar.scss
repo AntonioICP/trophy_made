@@ -54,3 +54,50 @@
     margin: 0;
   }
 }
+
+
+// Individual dropdown styles
+.navbar-nav .dropdown-menu {
+  min-width: 200px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #495057;
+
+    &:hover {
+      background-color: #f8f9fa;
+      color: #0D2149;
+    }
+
+    &.fw-bold {
+      color: #0D2149;
+      border-bottom: 1px solid #dee2e6;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .dropdown-divider {
+    margin: 0.5rem 1rem;
+  }
+}
+
+// Hover effect for dropdowns
+.navbar-nav .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+// Mobile adjustments
+@media (max-width: 991.98px) {
+  .navbar-nav .dropdown-menu {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none;
+    border: 1px solid #dee2e6;
+    margin-top: 0.5rem;
+  }
+}

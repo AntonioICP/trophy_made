@@ -56,7 +56,7 @@
             <%= image_tag "sports.webp", class: "img-fluid", alt: "Sports Trophies" %>
           </div>
           <div class="category-button">
-            <%= link_to "Sports Trophies", "#", class: "btn btn-outline-primary w-100" %>
+            <%= link_to "Sports Trophies", products_path(category_type: "sports"), class: "btn btn-outline-primary w-100" %>
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
             <%= image_tag "corporate.webp", class: "img-fluid", alt: "Corporate Awards" %>
           </div>
           <div class="category-button">
-            <%= link_to "Corporate Awards", "#", class: "btn btn-outline-primary w-100" %>
+            <%= link_to "Corporate Awards", products_path(category_type: "corporate"), class: "btn btn-outline-primary w-100" %>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@
             <%= image_tag "medals.webp", class: "img-fluid", alt: "Medals" %>
           </div>
           <div class="category-button">
-            <%= link_to "Medals", "#", class: "btn btn-outline-primary w-100" %>
+            <%= link_to "Medals", products_path(product_style: "Medals"), class: "btn btn-outline-primary w-100" %>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@
             <%= image_tag "cups.webp", class: "img-fluid", alt: "Cups" %>
           </div>
           <div class="category-button">
-            <%= link_to "Cups", "#", class: "btn btn-outline-primary w-100" %>
+            <%= link_to "Cups", products_path(product_style: "Cups"), class: "btn btn-outline-primary w-100" %>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
             <%= image_tag "plaques.webp", class: "img-fluid", alt: "Plaques" %>
           </div>
           <div class="category-button">
-            <%= link_to "Plaques", "#", class: "btn btn-outline-primary w-100" %>
+            <%= link_to "Plaques", products_path(product_style: "Plaques"), class: "btn btn-outline-primary w-100" %>
           </div>
         </div>
       </div>
