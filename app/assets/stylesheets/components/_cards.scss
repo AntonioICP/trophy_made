@@ -14,7 +14,7 @@
   flex-direction: column;
   justify-content: flex-start;
   text-align: left;
-  height: 100%;
+  height: auto;
   min-height: 300px; // set min height
   transition: transform 0.2s ease;
 }
@@ -24,7 +24,7 @@
 }
 
 .image-wrapper {
-  height: 320px;
+  height: 270px;
   padding: 16px;
   display: flex;
   justify-content: center;
@@ -51,8 +51,9 @@
 }
 
 .card-trip img {
+  height: auto;
   max-height: 100%;
-  max-width: 100%;
+  width: 100%;
   object-fit: contain;
 }
 
@@ -75,10 +76,10 @@
 
 .card-category {
   // display: flex;
-  // justify-content: center;
-  // align-items: center;
+  // JUSTIFY-CONTENT: CENTER;
+  // ALIGN-ITEMS: CENTER;
   //
-  // box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  // BOX-SHADOW: 0 0 15PX RGBA(0,0,0,0.2);
   width: 250px;
   text-align: center;
 }

@@ -1,51 +1,55 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-Product.create!([
-  {
-    name: "Clear Dorado Wedge Acrylic Award",
-    SKU: "AC103",
-    description: "From the best performing team to the highest salesperson, acknowledge those who have gone above and beyond with this award.\n\n**Decorating on the award is for illustration purposes only**",
-    image_url: "https://trophymade.com/app/uploads/2023/04/AC103.webp",
-    cloudinary_template_url: "https://trophymade.com/app/uploads/2022/02/AC103_T.png",
-    price: 77.5
-  },
-  {
-    name: "Black Dorado Wedge Acrylic Award",
-    SKU: "AC103-K",
-    description: "From the best performing team to the highest salesperson, acknowledge those who have gone above and beyond with this award.\n\n**Decorating on the award is for illustration purposes only**",
-    image_url: "https://trophymade.com/app/uploads/2023/04/ACC09B-K.webp",
-    cloudinary_template_url: "https://trophymade.com/app/uploads/2022/02/AC103_T.png",
-    price: 77.5
-  },
-  {
-    name: "Matterhorn Clear & Bronze Acrylic Award",
-    SKU: "AC151A-Z",
-    description: "From the best performing team to the highest salesperson, acknowledge those who have gone above and beyond with this award.\n\n**Decorating on the award is for illustration purposes only**",
-    image_url: "https://trophymade.com/app/uploads/2023/04/AC151A-Z.webp",
-    cloudinary_template_url: "https://trophymade.com/app/uploads/2022/02/AC151B-S_T.png",
-    price: 121.74
-  },
-  {
-    name: "Arch Clear Acrylic Award",
-    SKU: "AC201-1",
-    description: "From the best performing team to the highest salesperson, acknowledge those who have gone above and beyond with this award.\n\n**Decorating on the award is for illustration purposes only**",
-    image_url: "https://trophymade.com/app/uploads/2023/04/AC201-1.webp",
-    cloudinary_template_url: "https://trophymade.com/app/uploads/2022/02/AC201-1_T.png",
-    price: 50.44
-  },
-  {
-    name: "Peak Clear Acrylic Award",
-    SKU: "AC201-2",
-    description: "From the best performing team to the highest salesperson, acknowledge those who have gone above and beyond with this award.\n\n**Decorating on the award is for illustration purposes only**",
-    image_url: "https://trophymade.com/app/uploads/2023/04/AC201-2.webp",
-    cloudinary_template_url: "https://trophymade.com/app/uploads/2022/02/AC201-2_T.png",
-    price: 50.44
-  }
-])
+require 'csv'
+
+Product.destroy_all
+
+CSV.foreach("db/data/TrophyMade DB_2.csv", headers: true) do |row|
+  product = Product.create!(
+    database_id: row["database_id"],
+    SKU: row["SKU"],
+    name: row["name"],
+    description: row["description"],
+    parent_id: row["parent_id"],
+    colour_value: row["colour_value"],
+    size_value: row["size_value"],
+    price: row["price"],
+    stock_status: row["stock_status"],
+    stock_quantity: row["stock_quantity"],
+    image_url: row["image_url"].to_s.split("|").first&.strip,
+    slug: row["slug"],
+    product_type: row["product_type"],
+    weight: row["weight"],
+    length: row["length"],
+    width: row["width"],
+    height: row["height"],
+    customiser_template: row["customiser_template"],
+    background_colour: row["Background Colour"],
+    personalisation_options: row["Personalisation Options"],
+    quality: Quality.find_or_create_by(name: row["quality"])
+  )
+
+  # Corporate categories
+  row["corporate_category"].to_s.split(",").map(&:strip).uniq.each do |corporate|
+    category = CorporateCategory.find_or_create_by(name: corporate)
+    product.corporate_categories << category unless product.corporate_categories.include?(category)
+  end
+
+  # Sports categories
+  row["sports_category"].to_s.split(",").map(&:strip).uniq.each do |sport|
+    sport_record = Sport.find_or_create_by(name: sport)
+    product.sports << sport_record unless product.sports.include?(sport_record)
+  end
+
+  # Material categories
+  row["material"].to_s.split(",").map(&:strip).uniq.each do |material|
+    material_record = Material.find_or_create_by(name: material)
+    product.materials << material_record unless product.materials.include?(material_record)
+  end
+
+  # Product_styles categories
+  row["product_style"].to_s.split(",").map(&:strip).uniq.each do |style|
+    style_record = ProductStyle.find_or_create_by(name: style)
+    product.product_styles << style_record unless product.product_styles.include?(style_record)
+  end
+end
+
+puts "Imported: #{Product.count} products"

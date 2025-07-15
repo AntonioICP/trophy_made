@@ -1,38 +1,151 @@
-<div class="banner" style="background-image: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.2)), url(https://t4.ftcdn.net/jpg/10/18/87/23/240_F_1018872371_YR4vkgQoJEbVbbS2YghMvatvvZCsYJdl.jpg);">
+<!-- HERO SECTION -->
+<section class="hero text-white">
   <div class="container">
-    <h1>Celebrate Victory</h1>
-    <p>Personalised Trophies design by you</p>
-    <a class="btn btn-mustard" href="/products">Shop now</a>
-  </div>
-</div>
+    <div class="row align-items-center h-100">
+      <!-- Left div -->
+      <div class="col-md-5 text-left">
+        <!-- Add content here for the left side -->
+        <p>Template GIF goes here</p>
+      </div>
 
-<h2 class="category-title">Shop by category</h2>
-<div class="cards">
-  <div class="card-category">
-    <div class="card-image" style="background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuBWtYRZ9rbXsQz2sE269ji1jDAD2lh_jK5sSZAMZukiBSDuHbsuhIpq7mTWxsJuO7fQ6dQ5fHy9aRVLea--gYbF-AA6eHBJj8kUrfWaSMHRQj9xKUtvXOD9WqQIHQZbEi8AVYXFqvWyOSfZ8fsAgW2oXZ-_GD2udv6nEC8mLiztLuQXO3nrajBSl_wN3NGP2G7RHlB3x7Yp2clauAnNzA-5qCVuQN2C599gYX0HvkKFCfdbldz8xRBSwIfpU8x-ACNR1Et65em4miAa)">
+      <!-- Right div -->
+      <div class="col-md-7 text-left">
+        <div class="hero-inner">
+          <h1 class="h1-small">Online Trophies Australia</h1>
+          <h1>Trophies designed by you.<br>
+          Made for you.<br>
+          Delivered with care.</h1>
+            <%= link_to "Start Customising", products_path, class: "btn btn-primary mt-4" %>
+        </div>
+      </div>
     </div>
-    <div class="card-text">Sports</div>
   </div>
+</section>
 
-  <div class="card-category">
-    <div class="card-image" style="background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuBh_yKxrepxwlMNu0Y1ijfPFxx3sdOlJd3Q1mehaxHCuDrkuITf2IxxsWSRiuyRfnbbN_yLuVUdNU6gjwqqBo2RQ_093xE61q0ZYTSAwigbWVg-hfk30yBPVfQneL_dUyS2wabRVLoX4jAS5IV6hN-wMrDhfmJF3jun-Y1yPdbWYA3WP5u-cuVBNn_yipRZJYOTTmykHRaOi5yCGRKulS5LKvXFvILkk8PQj6134V4ag8qWgKrfnbY_MWGP-I0HWvYoT5jfpRVf9rIM)">
+<!-- FEATURE ICONS -->
+<section class="bg-light py-5">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-md-4">
+        <i class="fas fa-truck fa-2x mb-2" style="color: #002147;"></i>
+        <h5 class="fw-semibold">Fast Delivery</h5>
+        <p class="text-muted small">Custom orders dispatched from Australia with tracking.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-trophy fa-2x mb-2" style="color: #002147;"></i>
+        <h5 class="fw-semibold">Personalised Awards</h5>
+        <p class="text-muted small">Design your own or use our easy templates with TrophyMaker.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-globe fa-2x mb-2" style="color: #002147;"></i>
+        <h5 class="fw-semibold">Nationwide Shipping</h5>
+        <p class="text-muted small">From Sydney to Perth, we deliver everywhere in Australia.</p>
+      </div>
     </div>
-    <div class="card-text">Corporative</div>
   </div>
+</section>
 
-  <div class="card-category">
-    <div class="card-image" style="background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuDBv3Yf7Agzsp-98VHexzyrlxj6_gPm5BfhpQXQVd0-TVqTxgm9-nyrrg6Br1l9ne_GvmUDty_W8EBA5mw7SXBlkdI9WhdbvWU3-dhgFnxbd8C1x5CAvKQCm4H48W17NkY6IaM6p3_ap-aE7KQRTxBumfh-o3-hD_fOdEEvOqNkYCrdrx2DYiUOS9LN3517qTCepRv63kkvUXPN1PcSBSvArWR3nQljpDylTav5flv5heYyYI020sBmWrx8bM1SVFPjhj_oSXirfTX8)">
+<!-- SHOP BY CATEGORY -->
+<section class="py-5">
+  <div class="container text-center category-section">
+    <h3 class="mb-5">SHOP BY CATEGORY:</h3>
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="category-card">
+          <div class="category-image">
+            <%= image_tag "sports.webp", class: "img-fluid", alt: "Sports Trophies" %>
+          </div>
+          <div class="category-button">
+            <%= link_to "Sports Trophies", "#", class: "btn btn-outline-primary w-100" %>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="category-card">
+          <div class="category-image">
+            <%= image_tag "corporate.webp", class: "img-fluid", alt: "Corporate Awards" %>
+          </div>
+          <div class="category-button">
+            <%= link_to "Corporate Awards", "#", class: "btn btn-outline-primary w-100" %>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="category-card">
+          <div class="category-image">
+            <%= image_tag "medals.webp", class: "img-fluid", alt: "Medals" %>
+          </div>
+          <div class="category-button">
+            <%= link_to "Medals", "#", class: "btn btn-outline-primary w-100" %>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="category-card">
+          <div class="category-image">
+            <%= image_tag "cups.webp", class: "img-fluid", alt: "Cups" %>
+          </div>
+          <div class="category-button">
+            <%= link_to "Cups", "#", class: "btn btn-outline-primary w-100" %>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="category-card">
+          <div class="category-image">
+            <%= image_tag "plaques.webp", class: "img-fluid", alt: "Plaques" %>
+          </div>
+          <div class="category-button">
+            <%= link_to "Plaques", "#", class: "btn btn-outline-primary w-100" %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-text">Academic</div>
   </div>
-</div>
+</section>
 
-<div class="footer">
-  <div class="footer-links">
-    <a href="#"><i class="fab fa-instagram"></i></a>
-    <a href="#"><i class="fab fa-facebook"></i></a>
+<!-- TROPHYMAKER INTRO -->
+<section class="bg-light py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h4 class="fw-bold">Create your award with TrophyMaker</h4>
+        <p>Upload your logo, add text, select fonts and sizes – all within our easy editor.</p>
+        <%= link_to "Learn More", "#", class: "btn btn-outline-primary" %>
+      </div>
+      <div class="col-md-6 text-center">
+        <%= image_tag "trophy-maker-preview.webp", class: "img-fluid", alt: "TrophyMaker example" %>
+      </div>
+    </div>
   </div>
-  <div class="footer-about">
+</section>
 
+<!-- TESTIMONIALS SLIM -->
+<section class="testimonials text-center">
+  <div class="container">
+    <h2 class="section-title">Customer Reviews</h2>
+    <div class="row justify-content-center">
+      <% ["Perfect finish!", "Fast & reliable.", "Flawless service."].each_with_index do |review, i| %>
+        <div class="col-md-3">
+          <p class="quote">“<%= review %>”</p>
+          <p class="name">– Customer <%= i + 1 %></p>
+        </div>
+      <% end %>
+    </div>
   </div>
-</div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter bg-light text-center">
+  <div class="container">
+    <h4>Subscribe for VIP Offers</h4>
+    <form class="row justify-content-center mt-3">
+      <div class="col-12 col-sm-6 col-md-4">
+        <input type="email" class="form-control" placeholder="Your email">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-dark">Subscribe</button>
+      </div>
+    </form>
+  </div>
+</section>

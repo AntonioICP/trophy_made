@@ -1,51 +1,168 @@
-// Specific CSS for your home-page
-.banner {
-  margin: 0 auto;
-  height: 500px;
-  width: 800px;
-  background-size: cover;
-  background-position: center;
-  padding: 150px 0;
-  border-radius: 10px;
-  text-align: center;
-
+body {
+  color: #111;
+  background-color: #fff;
 }
 
-.banner h1 {
-  margin: 0;
-  color: white;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  font-size: 32px;
-  font-weight: bold;
-  margin-top: 20px;
+// Shared styles
+.section-title {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
 }
 
-.banner p {
-  font-size: 20px;
-  color: white;
-  // opacity: .7;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  margin-top: 20px;
-}
+// Hero
+.hero {
+  background-color: #0D2149;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  padding-top: 0;
 
-.btn-mustard {
-  background-color: #FFDB58;
-  color: #000;
-  border: none;
-  border-radius: 10px;
-  margin-top: 50px;
+  .hero-inner {
+    max-width: 700px;
+    transform: translateY(-10%);
 
-  &:hover {
-    background-color: darken(#FFDB58, 10%);
+    h1 {
+      font-size: 3rem;
+      line-height: 2;
+    }
+
+    .h1-small {
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
+          font-weight: 400;
+        }
+
+    p {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .btn-primary {
+      background-color: transparent;
+      color: #fff;
+      padding: 12px 32px;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      font-weight: 500;
+
+      &:hover {
+        background-color: #F3A712;
+        color: #000;
+        border-color: #F3A712;
+      }
+    }
   }
 }
 
-.category-title {
-  font-size: 20px;
-  color: black;
-  // text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  margin-top: 50px;
-  margin-bottom: 50px;
-  font-weight: bold;
-  text-align: center;
+// Highlights
+.highlights {
+  background-color: #f8f8f8;
+  padding: 20px 0;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+// Shop by Category
+.category-card {
+  margin-bottom: 30px;
+
+  .category-image {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 30px 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+
+    img {
+      height: auto;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .category-button {
+    .btn-outline-primary {
+      border-color: #0D2149;
+      color: #0D2149;
+      font-weight: 500;
+      border-radius: 8px;
+      padding: 10px 20px;
+
+      &:hover {
+        background-color: #0D2149;
+        border-color: #0D2149;
+        color: white;
+      }
+    }
+  }
+}
+
+// Add more spacing to the category section
+section .row.g-4 {
+  --bs-gutter-x: 2rem;
+}
+
+// Editor
+.editor {
+  background-color: #1c1c1c;
+  color: white;
+  padding: 80px 0;
+
+  .btn-light {
+    background-color: white;
+    color: #000;
+    padding: 10px 26px;
+    border: none;
+
+    &:hover {
+      background-color: #ddd;
+    }
+  }
+}
+
+// Testimonials
+.testimonials {
+  padding: 60px 0;
+
+  .quote {
+    font-style: italic;
+    font-size: 1rem;
+    color: #444;
+  }
+
+  .name {
+    font-weight: bold;
+    color: #888;
+    margin-top: 10px;
+  }
+}
+
+// Newsletter
+.newsletter {
+  padding: 60px 0;
+
+  h4 {
+    font-weight: 600;
+  }
+
+  .form-control {
+    border-radius: 4px;
+  }
+
+  .btn-dark {
+    background-color: #0D2149;
+    border-color: #0D2149;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #F3A712;
+    }
+  }
+}
+
+.category-section {
+  max-width: 100%;
 }
