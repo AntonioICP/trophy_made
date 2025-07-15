@@ -303,6 +303,8 @@ class CurvedTextApp {
       defaultFill: 'black'
     };
 
+    this.useCurvedText = false;
+
     this.elements = {
       text: null,
       fontSize: null,
@@ -320,12 +322,14 @@ class CurvedTextApp {
    * Initialize the application
    */
   init() {
-    document.addEventListener('DOMContentLoaded', () => {
-      this.initializeElements();
-      this.initializeCanvases();
-      this.createInitialText();
-      this.bindEvents();
-      this.logCanvasJSON();
+    document.addEventListener('turbo:load', () => {
+      if (document.getElementById('addToCanvas')) {
+        this.initializeElements();
+        this.initializeCanvases();
+        this.createInitialText();
+        this.bindEvents();
+        this.logCanvasJSON();
+      };
     });
   }
 
@@ -357,8 +361,12 @@ class CurvedTextApp {
    * Create initial curved text object
    */
   createInitialText() {
-    const initialCurvedText = new fabric.CurvedText(this.config.defaultText, {
-      diameter: this.config.defaultDiameter,
+    // const initialCurvedText = new fabric.CurvedText(this.config.defaultText, {
+    //   diameter: this.config.defaultDiameter,
+    //
+    // });
+
+    const initialText = new fabric.Text(this.config.defaultText, {
       fontSize: this.config.defaultFontSize,
       fontFamily: this.config.defaultFont,
       left: this.config.defaultPosition.left,
@@ -366,7 +374,7 @@ class CurvedTextApp {
       fill: this.config.defaultFill
     });
 
-    this.fcanvas.add(initialCurvedText);
+    this.fcanvas.add(initialText);
   }
 
   /**
@@ -390,8 +398,18 @@ class CurvedTextApp {
     const values = this.getFormValues();
     const activeObject = this.fcanvas.getActiveObject();
 
-    if (activeObject && activeObject.type === 'curved-text') {
+    if (activeObject) {
+      if (activeObject.type === 'text') {
+      // if (activeObject.type === 'text' && values.diameter !== this.config.defaultDiameter) {
+        this.convertToCurvedText(activeObject, values.diameter);
+        return;
+      }
+      // else if (activeObject.type === 'text' && values.diameter !== this.config.defaultDiameter) {
+      //   this.convertToCurvedText(activeObject, values.diameter);
+      //   return;
+      // }
       this.updateExistingObject(activeObject, values);
+      // this.updateExistingObject(activeObject, values);
     } else if (shouldCreateNew) {
       this.createaddToCanvas(values);
     }
@@ -403,15 +421,54 @@ class CurvedTextApp {
    * @param {Object} values - New values
    */
   updateExistingObject(object, values) {
-    object.set({
-      text: values.text,
-      diameter: values.diameter,
-      fontSize: values.fontSize,
-      fontFamily: this.config.defaultFont,
-      kerning: values.kerning,
-      flipped: values.flipped
-    });
+    if (object.type == 'curved-text') {
+      object.set({
+        text: values.text,
+        diameter: values.diameter,
+        fontSize: values.fontSize,
+        fontFamily: this.config.defaultFont,
+        kerning: values.kerning,
+        flipped: values.flipped
+      });
+    } else if (object.type == 'text') {
+      object.set({
+        text: values.text,
+        diameter: values.diameter,
+        fontSize: values.fontSize,
+        fontFamily: this.config.defaultFont,
+        charSpacing: values.kerning * 50,
+        flipX: values.flipped
+      });
+    }
+
     this.fcanvas.renderAll();
+  }
+
+  convertToCurvedText(textObject, diameter) {
+    console.log("hello");
+    const properties = {
+      text: textObject.text,
+      fontSize: textObject.fontSize,
+      fontFamily: textObject.fontFamily,
+      left: textObject.left,
+      top: textObject.top,
+      fill: textObject.fill,
+      diameter: diameter
+    };
+    this.fcanvas.remove(textObject);
+    const curvedTextObject = new fabric.CurvedText(properties.text, {
+      diameter: properties.diameter,
+      fontSize: properties.fontSize,
+      fontFamily: properties.fontFamily,
+      left: properties.left,
+      top: properties.top,
+      fill: properties.fill
+    });
+    this.fcanvas.add(curvedTextObject);
+    this.fcanvas.setActiveObject(curvedTextObject);
+    this.fcanvas.renderAll();
+
+    this.useCurvedText = true;
   }
 
   /**
@@ -419,16 +476,23 @@ class CurvedTextApp {
    * @param {Object} values - Object values
    */
   createaddToCanvas(values) {
-    const addToCanvas = new fabric.CurvedText(values.text, {
-      diameter: values.diameter,
-      fontSize: values.fontSize,
+    // const addToCanvas = new fabric.CurvedText(values.text, {
+      // diameter: values.diameter,
+      // fontSize: values.fontSize,
+      // fontFamily: this.config.defaultFont,
+      // kerning: values.kerning,
+      // flipped: values.flipped,
+      // left: this.config.defaultPosition.left,
+      // top: this.config.defaultPosition.top
+    // });
+    const straightText = new fabric.Text(values.text, {
+      fontSize: this.config.defaultFontSize,
       fontFamily: this.config.defaultFont,
-      kerning: values.kerning,
-      flipped: values.flipped,
       left: this.config.defaultPosition.left,
-      top: this.config.defaultPosition.top
-    });
-    this.fcanvas.add(addToCanvas);
+      top: this.config.defaultPosition.top,
+      fill: this.config.defaultFill
+    })
+    this.fcanvas.add(straightText);
   }
 
   /**
