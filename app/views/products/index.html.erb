@@ -1,13 +1,32 @@
 <div class="container-fluid px-4">
   <div class="row">
     <!-- LEFT SIDEBAR FILTERS -->
-    <aside class="col-lg-3 mb-4 filter-sidebar">
-  <h5 class="fw-bold d-flex justify-content-between align-items-center">
-    Filter
-    <%= link_to "Clear All", products_path, class: "btn-clear" %>
-  </h5>
+    <aside class="col-lg-3 mb-4 filter-sidebar sticky-sidebar">
+  <div class="sticky-content">
+    <h5 class="fw-bold d-flex justify-content-between align-items-center">
+      Filter
+      <%= link_to "Clear All", products_path, class: "btn-clear" %>
+    </h5>
 
   <div class="active-filters mb-3">
+  <% if params[:category_type].present? %>
+    <span class="filter-tag">
+      <%= params[:category_type].titleize %>
+      <%= link_to remove_filter_path(:category_type), class: "remove-filter" do %>
+        &times;
+      <% end %>
+    </span>
+  <% end %>
+
+  <% if params[:product_style].present? %>
+    <span class="filter-tag">
+      <%= params[:product_style] %>
+      <%= link_to remove_filter_path(:product_style), class: "remove-filter" do %>
+        &times;
+      <% end %>
+    </span>
+  <% end %>
+
   <% if params[:sport_ids].present? %>
     <% Array(params[:sport_ids]).each do |sport_id| %>
       <% sport = Sport.find(sport_id) %>
@@ -53,6 +72,23 @@
 
   <%= form_with url: products_path, method: :get, local: true, data: { controller: "filter" } do |f| %>
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="mb-0">Sort by</p>
+    <%= f.select :sort,
+    options_for_select([
+      ['Default', ''],
+      ['Price: Low-High', 'price_asc'],
+      ['Price: High-Low', 'price_desc'],
+      ['Name: A-Z', 'name_asc'],
+      ['Name: Z-A', 'name_desc']
+    ], params[:sort]),
+    {},
+    {
+      id: 'sort-select',
+      class: 'form-select sort-select',
+      style: 'min-width: 150px; max-width: 250px'
+    } %>
+  </div>
 <!-- Material Filter -->
 <div class="filter-group mb-3 my-4">
   <a data-bs-toggle="collapse" href="#collapseMaterials" class="text-decoration-none d-flex align-items-center"
@@ -107,22 +143,15 @@
   </div>
 </div>
   <% end %>
+  </div>
 </aside>
 
 
 
     <!-- PRODUCT GRID -->
     <section class="col-lg-9">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center my-3">
         <p class="mb-0">Showing <%= @products.size %> of <%= @products.size %> results</p>
-        <div>
-          <label for="sort-select" class="me-2">Sort by</label>
-          <select id="sort-select" class="form-select d-inline-block w-auto">
-            <option>Default sorting</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-          </select>
-        </div>
       </div>
 
       <div class="cards-grid">

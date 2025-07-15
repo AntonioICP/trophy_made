@@ -128,3 +128,40 @@ a[aria-expanded="true"] .arrow {
     }
   }
 }
+
+.form-select-sm {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .d-flex.justify-content-between.align-items-center {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+// Sticky sidebar
+
+.sticky-sidebar {
+  .sticky-content {
+    position: sticky;
+    top: 110px; // Adjust this to match your navbar + announcement bar height
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    padding-right: 10px;
+
+    // Smooth scrolling
+    scroll-behavior: smooth;
+  }
+}
+
+// Adjust for different screen sizes
+@media (max-width: 991.98px) {
+  .sticky-sidebar .sticky-content {
+    position: static; // Remove sticky on mobile
+    max-height: none;
+    overflow-y: visible;
+  }
+}

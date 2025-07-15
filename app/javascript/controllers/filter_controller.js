@@ -16,6 +16,14 @@ export default class extends Controller {
         this.debouncedSubmit()
       })
     })
+
+    // Auto-submit on sort change
+    this.element.querySelectorAll('.sort-select').forEach((select) => {
+      select.addEventListener('change', (e) => {
+        this.addOpenSections()
+        this.element.submit()
+      })
+    })
   }
 
   debouncedSubmit() {
