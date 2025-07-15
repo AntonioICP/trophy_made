@@ -114,7 +114,7 @@
        */
       getCircularText: function() {
         let text = this.text;
-        const diameter = this.diameter;
+        const diameter = 2000 - this.diameter;
         const flipped = this.flipped;
         const kerning = this.kerning;
         const fill = this.fill;
@@ -399,17 +399,17 @@ class CurvedTextApp {
     const activeObject = this.fcanvas.getActiveObject();
 
     if (activeObject) {
-      if (activeObject.type === 'text') {
-      // if (activeObject.type === 'text' && values.diameter !== this.config.defaultDiameter) {
+      if (values.diameter === 100) {
+        if (activeObject.type === 'curved-text') {
+          this.convertToStraightText(activeObject, values.diameter);
+          return;
+        }
+      } else if (activeObject.type === 'text') {
         this.convertToCurvedText(activeObject, values.diameter);
         return;
       }
-      // else if (activeObject.type === 'text' && values.diameter !== this.config.defaultDiameter) {
-      //   this.convertToCurvedText(activeObject, values.diameter);
-      //   return;
-      // }
+
       this.updateExistingObject(activeObject, values);
-      // this.updateExistingObject(activeObject, values);
     } else if (shouldCreateNew) {
       this.createaddToCanvas(values);
     }
@@ -445,7 +445,6 @@ class CurvedTextApp {
   }
 
   convertToCurvedText(textObject, diameter) {
-    console.log("hello");
     const properties = {
       text: textObject.text,
       fontSize: textObject.fontSize,
@@ -471,6 +470,31 @@ class CurvedTextApp {
     this.useCurvedText = true;
   }
 
+  convertToStraightText(textObject, diameter) {
+    const properties = {
+      text: textObject.text,
+      fontSize: textObject.fontSize,
+      fontFamily: textObject.fontFamily,
+      left: textObject.left,
+      top: textObject.top,
+      fill: textObject.fill,
+      diameter: diameter
+    };
+    this.fcanvas.remove(textObject);
+    const straightTextObject = new fabric.Text(properties.text, {
+      fontSize: properties.fontSize,
+      fontFamily: properties.fontFamily,
+      left: properties.left,
+      top: properties.top,
+      fill: properties.fill
+    });
+    this.fcanvas.add(straightTextObject);
+    this.fcanvas.setActiveObject(straightTextObject);
+    this.fcanvas.renderAll();
+
+    this.useCurvedText = false;
+  }
+
   /**
    * Create new curved text object
    * @param {Object} values - Object values
@@ -493,6 +517,7 @@ class CurvedTextApp {
       fill: this.config.defaultFill
     })
     this.fcanvas.add(straightText);
+    this.elements.diameter.value = 100;
   }
 
   /**
@@ -559,7 +584,7 @@ class CurvedTextApp {
    */
   deleteItem() {
     const activeObject = this.fcanvas.getActiveObject();
-    if (activeObject && activeObject.type === 'curved-text') {
+    if (activeObject) {
       this.fcanvas.remove(activeObject);
       this.fcanvas.renderAll();
     }
