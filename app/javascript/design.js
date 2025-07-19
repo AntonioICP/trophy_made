@@ -329,6 +329,11 @@ class CurvedTextApp {
         this.createInitialText();
         this.bindEvents();
         this.logCanvasJSON();
+        const saveButton = document.getElementById('saveDesign');
+        if (saveButton) {
+          console.log("HOLA")
+          saveButton.addEventListener('click', saveDesign);
+        }
       };
     });
   }
@@ -614,6 +619,39 @@ class CurvedTextApp {
     return JSON.stringify(this.fcanvas.toJSON());
   }
 
+  saveDesign() {
+    console.log("HELLO")
+    const design = document.getElementById('canvas1')
+    const dataURL = design.toDataURL('image/png')
+    debugger;
+    fetch('/designs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ design: { image_data: dataURL } })
+    }).then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          alert("Design saved!");
+        } else {
+          alert("Error saving design.");
+          console.error(data.errors);
+        }
+      });
+    // document.addEventListener('DOMContentLoaded', function () {
+    //   console.log("BAHN MI");
+    //   const saveButton = document.getElementById('saveDesign');
+    //   if (saveButton) {
+    //     console.log("HOLA")
+    //     saveButton.addEventListener('click', saveDesign);
+    //   }
+    // });
+  }
+
+
+
   /**
    * Load canvas from JSON
    * @param {string} jsonString - Canvas JSON string
@@ -630,5 +668,5 @@ class CurvedTextApp {
 }
 
 // Initialize application
-const curvedTextApp = new CurvedTextApp();
-curvedTextApp.init();
+  const curvedTextApp = new CurvedTextApp();
+  curvedTextApp.init();
