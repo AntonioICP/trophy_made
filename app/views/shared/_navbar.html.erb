@@ -90,7 +90,8 @@
       </ul>
     </li>
 </div>
-      <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
+
+      <ul class="navbar-nav ms-auto d-flex align-items-center gap-4">
         <!-- Search -->
         <li class="nav-item">
           <button type="button"
@@ -117,10 +118,10 @@
         <!-- User -->
         <% if user_signed_in? %>
           <li class="nav-item dropdown">
-            <a href="#" id="navbarDropdown" class="avatar dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <%= image_tag "https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg", class: "avatar rounded-circle", height: "32", alt: "Avatar" %>
+            <a href="#" id="navbarDropdown" class="text-white d-flex align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+              <i class="fa-solid fa-user" style="font-size: 16px;"></i>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul class="dropdown-menu dropdown-menu-end" style="right: 0; left: auto; min-width: 160px;">
               <%= link_to "Profile", "#", class: "dropdown-item" %>
               <%= link_to "Orders", "#", class: "dropdown-item" %>
               <% if current_user.admin? %>
@@ -134,7 +135,6 @@
             <%= link_to "Login", new_user_session_path, class: "nav-link text-white" %>
           </li>
         <% end %>
-      </ul>
 
 
   <!-- SEARCH BAR DROPDOWN -->

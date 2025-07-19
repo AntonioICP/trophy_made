@@ -4,19 +4,29 @@ class OrderItemsController < ApplicationController
   end
 
   def create
-    order = current_order || Order.create(user: current_user, status: "pending")
+    order = current_order
     @product = Product.find(order_item_params[:product_id])
 
-    @order_item = OrderItem.new
-    @order_item.order = order
-    @order_item.product = @product
-    @order_item.quantity = order_item_params[:quantity].to_i
+    # Check if item already exists in cart
+    existing_item = order.order_items.find_by(product: @product)
 
-    if @order_item.save
-      session[:order_id] = order.id unless current_user
-      redirect_to cart_path, notice: "Added to cart!"
+    if existing_item
+      # Update quantity if item exists
+      existing_item.update(quantity: existing_item.quantity + order_item_params[:quantity].to_i)
+      redirect_to cart_path, notice: "Updated quantity in cart!"
     else
-      redirect_back fallback_location: root_path, alert: "Could not add item."
+      # Create new item
+      @order_item = OrderItem.new
+      @order_item.order = order
+      @order_item.product = @product
+      @order_item.quantity = order_item_params[:quantity].to_i
+
+      if @order_item.save
+        session[:order_id] = order.id unless current_user
+        redirect_to cart_path, notice: "Added to cart!"
+      else
+        redirect_back fallback_location: root_path, alert: "Could not add item."
+      end
     end
   end
 
@@ -38,18 +48,11 @@ class OrderItemsController < ApplicationController
   private
 
   def current_order
-    if current_user
-      current_user.orders.find_by(status: "pending")
-    elsif session[:order_id]
-      Order.find_by(id: session[:order_id], status: "pending")
-    else
-      @order = Order.new(session_id: session[:session_id], status: "pending")
-      @order.save!
-      @order
-    end
+    # Use the application controller's current_order method
+    super
   end
 
   def order_item_params
-    params.require(:order_item).permit(:order_id, :product_id, :quantity)
+    params.require(:order_item).permit(:product_id, :quantity)
   end
 end

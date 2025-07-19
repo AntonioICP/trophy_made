@@ -5,8 +5,14 @@ class ApplicationController < ActionController::Base
   # before_action :authenticate_user!
 
   def current_order
-    @current_order ||= Order.find_or_create_by(id: session[:order_id], status: "pending").tap do |order|
-      session[:order_id] = order.id
+    @current_order ||= if current_user
+      # For logged-in users, find or create an order associated with the user
+      current_user.orders.find_or_create_by(status: "pending")
+    else
+      # For guest users, use session-based orders
+      Order.find_or_create_by(id: session[:order_id], status: "pending").tap do |order|
+        session[:order_id] = order.id
+      end
     end
   end
 
@@ -16,7 +22,41 @@ class ApplicationController < ActionController::Base
     root_path
   end
 
+  def after_sign_in_path_for(resource)
+    merge_guest_cart_with_user_cart if session[:order_id].present?
+    stored_location_for(resource) || root_path
+  end
+
   private
+
+  def merge_guest_cart_with_user_cart
+    guest_order = Order.find_by(id: session[:order_id], status: "pending")
+    return unless guest_order&.order_items&.any?
+
+    user_order = current_user.orders.find_or_create_by(status: "pending")
+
+    guest_order.order_items.each do |guest_item|
+      # Check if user already has this product in their cart
+      existing_item = user_order.order_items.find_by(product: guest_item.product)
+
+      if existing_item
+        # Add quantities together
+        existing_item.update(quantity: existing_item.quantity + guest_item.quantity)
+      else
+        # Transfer the item to user's cart
+        guest_item.update(order: user_order)
+      end
+    end
+
+    # Clean up the empty guest order
+    guest_order.destroy if guest_order.order_items.empty?
+
+    # Clear the session
+    session[:order_id] = nil
+
+    # Reset the current_order cache
+    @current_order = nil
+  end
 
   def set_navbar_data
     sport_names = ["Academic", "Baseball", "Basketball", "Distinctive", "Fantasy Sport", "Football", "Golf", "Hockey", "Music", "Soccer", "Victory", "Your Club Logo"]
