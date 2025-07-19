@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Order #<%= @order.id %></h1>
+    <div>
+      <%= link_to "Edit Order", edit_admin_order_path(@order), class: "btn btn-primary" %>
+      <%= link_to "Back to Orders", admin_orders_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Order Details -->
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Order Details</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless">
+            <tr>
+              <td><strong>Order ID:</strong></td>
+              <td>#<%= @order.id %></td>
+            </tr>
+            <tr>
+              <td><strong>Status:</strong></td>
+              <td>
+                <span class="badge bg-<%= @order.status == 'completed' ? 'success' : @order.status == 'processing' ? 'warning' : 'secondary' %>">
+                  <%= @order.status.humanize %>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Created:</strong></td>
+              <td><%= @order.created_at.strftime("%d %B %Y at %I:%M %p") %></td>
+            </tr>
+            <tr>
+              <td><strong>Customer:</strong></td>
+              <td><%= @order.user&.email || 'Guest Customer' %></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Order Items</h5>
+        </div>
+        <div class="card-body">
+          <% if @order.order_items.any? %>
+            <% @order.order_items.each do |item| %>
+              <div class="border-bottom pb-2 mb-2">
+                <strong><%= item.product&.name || 'Product' %></strong><br>
+                <small class="text-muted">Quantity: <%= item.quantity || 1 %></small><br>
+                <small class="text-muted">Price: $<%= item.product&.price || '0.00' %></small>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">No items in this order.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -19,8 +19,8 @@
           <tr>
             <td><%= item.product.name %></td>
             <td class="text-center"><%= item.quantity %></td>
-            <td class="text-end">$<%= item.product.price %></td>
-            <td class="text-end">$<%= (item.product.price * item.quantity).round(2) %></td>
+            <td class="text-end">$<%= item.product.price || 0.00 %></td>
+            <td class="text-end">$<%= ((item.product.price || 0) * item.quantity).round(2) %></td>
             <td class="text-end">
               <%= button_to "Remove", order_item_path(item), method: :delete, data: { turbo_confirm: "Remove this item?" }, class: "btn btn-outline-danger btn-sm" %>
             </td>
@@ -30,7 +30,7 @@
     </table>
 
     <div class="d-flex flex-column align-items-end mt-4">
-      <h4>Total: $<%= @order.order_items.sum { |item| item.quantity * item.product.price }.round(2) %></h4>
+      <h4>Total: $<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></h4>
       <%= link_to "Checkout", "#", class: "btn btn-primary mt-2" %>
     </div>
   <% end %>

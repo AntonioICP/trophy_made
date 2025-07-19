@@ -6,4 +6,12 @@ class User < ApplicationRecord
 
   has_many :user_designs
   has_many :orders
+
+  def admin?
+    admin
+  end
+
+  def make_admin!
+    update!(admin: true)
+  end
 end

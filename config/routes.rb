@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  # Add this admin namespace
+  namespace :admin do
+    root 'dashboard#index'
+    resources :orders, only: [:index, :show, :edit, :update]
+    resources :users, only: [:index, :show]
+    resources :user_designs, only: [:index, :show]
+  end
+
   devise_for :users
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

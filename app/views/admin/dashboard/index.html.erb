@@ -1,0 +1,76 @@
+<% content_for :title, "Admin Dashboard" %>
+
+<div class="row">
+  <div class="col-12 text-center">
+    <h1>Admin Dashboard</h1>
+  </div>
+</div>
+
+<div class="row mb-4 justify-content-center">
+  <div class="col-md-3">
+    <div class="card text-white bg-primary">
+      <div class="card-body">
+        <h5 class="card-title">Total Orders</h5>
+        <h2><%= @total_orders %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-warning">
+      <div class="card-body">
+        <h5 class="card-title">Pending Orders</h5>
+        <h2><%= @pending_orders %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-success">
+      <div class="card-body">
+        <h5 class="card-title">Total Users</h5>
+        <h2><%= @total_users %></h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5>Recent Orders</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_orders.each do |order| %>
+                <tr>
+                  <td>#<%= order.id %></td>
+                  <td><%= order.user&.email || 'Guest' %></td>
+                  <td>
+                    <span class="badge bg-<%= order.status == 'pending' ? 'warning' : 'success' %>">
+                      <%= order.status.humanize %>
+                    </span>
+                  </td>
+                  <td><%= order.created_at.strftime("%d %b %Y") %></td>
+                  <td>
+                    <%= link_to "View", admin_order_path(order), class: "btn btn-sm btn-outline-primary" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
