@@ -29,4 +29,5 @@ Rails.application.routes.draw do
   resources :order_items, only: [:index, :show, :edit, :update, :destroy]
   resources :orders, only: %i[index show edit update destroy]
   resources :user_designs, only: %i[index show edit update destroy]
+  resource :profile, only: [:show, :edit, :update]
 end
