@@ -4,11 +4,11 @@
 </section>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-sm navbar-dark py-3 sticky-top" style="background-color: #0D2149;" data-controller="search-toggle">
+<nav class="navbar navbar-expand-sm navbar-dark py-1 sticky-top" style="background-color: #0D2149;" data-controller="search-toggle">
   <div class="container-fluid">
     <!-- Logo -->
     <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
-      <%= image_tag "TrophyMade-Logo-Primary-Reversed.png", height: "50", alt: "TrophyMade Logo" %>
+      <%= image_tag "TrophyMade-Logo-Primary-Reversed.png", height: "70", alt: "TrophyMade Logo" %>
     <% end %>
 
     <!-- Toggler -->
@@ -18,7 +18,7 @@
 
     <!-- Links -->
     <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="gap: 1.5rem;">
         <!-- Sports Trophies Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" id="sportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,10 +26,17 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="sportsDropdown">
             <li><%= link_to "View All Sports", products_path(category_type: "sports"), class: "dropdown-item fw-bold" %></li>
-            <li><hr class="dropdown-divider"></li>
-              <% @sports_for_menu.each do |sport| %>
-                <li><%= link_to sport.name, sport_path_by_name(sport.name), class: "dropdown-item" %></li>
-              <% end %>
+            <li class="px-3">
+              <div class="d-flex">
+                <% @sports_for_menu.each_slice(10).each do |sports_group| %>
+                  <div class="me-4" style="min-width: 150px;">
+                    <% sports_group.each do |sport| %>
+                      <%= link_to sport.name, sport_path_by_name(sport.name), class: "dropdown-item py-1" %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </li>
           </ul>
         </li>
 
@@ -41,10 +48,17 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="corporateDropdown">
             <li><%= link_to "View All Corporate Awards", products_path(category_type: "corporate"), class: "dropdown-item fw-bold" %></li>
-            <li><hr class="dropdown-divider"></li>
-              <% @corporate_awards_for_menu.each do |award| %>
-                <li><%= link_to award.name, award_path_by_name(award.name), class: "dropdown-item" %></li>
-              <% end %>
+            <li class="px-3">
+              <div class="d-flex">
+                <% @corporate_awards_for_menu.each_slice(10).each do |award_group| %>
+                  <div class="me-4" style="min-width: 150px;">
+                    <% award_group.each do |award| %>
+                      <%= link_to award.name, award_path_by_name(award.name), class: "dropdown-item py-1" %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </li>
           </ul>
         </li>
 
@@ -55,10 +69,17 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="medalsDropdown">
         <li><%= link_to "View All Medals", products_path(product_style: "Medals"), class: "dropdown-item fw-bold" %></li>
-        <li><hr class="dropdown-divider"></li>
-          <% @medals_sports_for_menu.each do |sport| %>
-                <li><%= link_to sport.name, medal_sport_path_by_name(sport.name), class: "dropdown-item" %></li>
-          <% end %>
+        <li class="px-3">
+          <div class="d-flex">
+            <% @medals_sports_for_menu.each_slice(10).each do |sports_group| %>
+              <div class="me-4" style="min-width: 150px;">
+                <% sports_group.each do |sport| %>
+                  <%= link_to sport.name, medal_sport_path_by_name(sport.name), class: "dropdown-item py-1" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </li>
       </ul>
     </li>
 
@@ -69,10 +90,17 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="cupsDropdown">
         <li><%= link_to "View All Cups", products_path(product_style: @cup_names), class: "dropdown-item fw-bold" %></li>
-        <li><hr class="dropdown-divider"></li>
-          <% @cups_qualities_for_menu.each do |quality| %>
-                <li><%= link_to quality.name, cup_quality_path_by_name(quality.name), class: "dropdown-item" %></li>
-          <% end %>
+        <li class="px-3">
+          <div class="d-flex">
+            <% @cups_qualities_for_menu.each_slice(10).each do |quality_group| %>
+              <div class="me-4" style="min-width: 150px;">
+                <% quality_group.each do |quality| %>
+                  <%= link_to quality.name, cup_quality_path_by_name(quality.name), class: "dropdown-item py-1" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </li>
       </ul>
     </li>
 
@@ -83,10 +111,17 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="plaquesDropdown">
         <li><%= link_to "View All Plaques", products_path(product_style: "Plaques"), class: "dropdown-item fw-bold" %></li>
-        <li><hr class="dropdown-divider"></li>
-          <% @plaques_qualities_for_menu.each do |quality| %>
-              <li><%= link_to quality.name, plaque_quality_path_by_name(quality.name), class: "dropdown-item" %></li>
-          <% end %>
+        <li class="px-3">
+          <div class="d-flex">
+            <% @plaques_qualities_for_menu.each_slice(10).each do |quality_group| %>
+              <div class="me-4" style="min-width: 150px;">
+                <% quality_group.each do |quality| %>
+                  <%= link_to quality.name, plaque_quality_path_by_name(quality.name), class: "dropdown-item py-1" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </li>
       </ul>
     </li>
 </div>
@@ -122,7 +157,7 @@
               <i class="fa-solid fa-user" style="font-size: 16px;"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" style="right: 0; left: auto; min-width: 160px;">
-              <%= link_to "Profile", "#", class: "dropdown-item" %>
+              <%= link_to "Profile", profile_path, class: "dropdown-item" %>
               <%= link_to "Orders", "#", class: "dropdown-item" %>
               <% if current_user.admin? %>
                 <%= link_to "Admin Panel", admin_root_path, class: "dropdown-item" %>
