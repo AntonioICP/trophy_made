@@ -6,7 +6,6 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-sm navbar-dark py-3 sticky-top" style="background-color: #0D2149;" data-controller="search-toggle">
   <div class="container-fluid">
-
     <!-- Logo -->
     <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
       <%= image_tag "TrophyMade-Logo-Primary-Reversed.png", height: "50", alt: "TrophyMade Logo" %>
@@ -20,36 +19,34 @@
     <!-- Links -->
     <div class="collapse navbar-collapse" id="navbarMain">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    <!-- Sports Trophies Dropdown -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle text-white" href="#" id="sportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Sports Trophies
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="sportsDropdown">
-        <li><%= link_to "View All Sports", products_path(category_type: "sports"), class: "dropdown-item fw-bold" %></li>
-        <li><hr class="dropdown-divider"></li>
-          <% @sports_for_menu.each do |sport| %>
-            <li><%= link_to sport.name, sport_path_by_name(sport.name), class: "dropdown-item" %></li>
-          <% end %>
-      </ul>
-    </li>
+        <!-- Sports Trophies Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="sportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sports Trophies
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="sportsDropdown">
+            <li><%= link_to "View All Sports", products_path(category_type: "sports"), class: "dropdown-item fw-bold" %></li>
+            <li><hr class="dropdown-divider"></li>
+              <% @sports_for_menu.each do |sport| %>
+                <li><%= link_to sport.name, sport_path_by_name(sport.name), class: "dropdown-item" %></li>
+              <% end %>
+          </ul>
+        </li>
 
-    <!-- Corporate Awards Dropdown -->
-    <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    <!-- Corporate Dropdown -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle text-white" href="#" id="corporateDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Corporate Awards
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="corporateDropdown">
-        <li><%= link_to "View All Corporate Awards", products_path(category_type: "corporate"), class: "dropdown-item fw-bold" %></li>
-        <li><hr class="dropdown-divider"></li>
-          <% @corporate_awards_for_menu.each do |award| %>
-            <li><%= link_to award.name, award_path_by_name(award.name), class: "dropdown-item" %></li>
-          <% end %>
-      </ul>
-    </li>
+      <!-- Corporate Awards Dropdown -->
+        <!-- Corporate Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="corporateDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Corporate Awards
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="corporateDropdown">
+            <li><%= link_to "View All Corporate Awards", products_path(category_type: "corporate"), class: "dropdown-item fw-bold" %></li>
+            <li><hr class="dropdown-divider"></li>
+              <% @corporate_awards_for_menu.each do |award| %>
+                <li><%= link_to award.name, award_path_by_name(award.name), class: "dropdown-item" %></li>
+              <% end %>
+          </ul>
+        </li>
 
     <!-- Medals Dropdown -->
     <li class="nav-item dropdown">
@@ -59,12 +56,9 @@
       <ul class="dropdown-menu" aria-labelledby="medalsDropdown">
         <li><%= link_to "View All Medals", products_path(product_style: "Medals"), class: "dropdown-item fw-bold" %></li>
         <li><hr class="dropdown-divider"></li>
-        <li><%= link_to "Academic Medals", products_path(product_style: "Medals", category_type: "academic"), class: "dropdown-item" %></li>
-        <li><%= link_to "Achievement Medals", products_path(product_style: "Medals", category_type: "achievement"), class: "dropdown-item" %></li>
-        <li><%= link_to "Sports Medals", products_path(product_style: "Medals", category_type: "sports"), class: "dropdown-item" %></li>
-        <li><%= link_to "Participation Medals", products_path(product_style: "Medals", category_type: "participation"), class: "dropdown-item" %></li>
-        <li><%= link_to "Custom Medals", products_path(product_style: "Medals", category_type: "custom"), class: "dropdown-item" %></li>
-        <li><%= link_to "Gold Medals", products_path(product_style: "Medals", material_ids: [1]), class: "dropdown-item" %></li>
+          <% @medals_sports_for_menu.each do |sport| %>
+                <li><%= link_to sport.name, medal_sport_path_by_name(sport.name), class: "dropdown-item" %></li>
+          <% end %>
       </ul>
     </li>
 
@@ -74,14 +68,11 @@
         Cups
       </a>
       <ul class="dropdown-menu" aria-labelledby="cupsDropdown">
-        <li><%= link_to "View All Cups", products_path(product_style: "Cups"), class: "dropdown-item fw-bold" %></li>
+        <li><%= link_to "View All Cups", products_path(product_style: @cup_names), class: "dropdown-item fw-bold" %></li>
         <li><hr class="dropdown-divider"></li>
-        <li><%= link_to "Trophy Cups", products_path(product_style: "Cups", category_type: "trophy"), class: "dropdown-item" %></li>
-        <li><%= link_to "Sports Cups", products_path(product_style: "Cups", category_type: "sports"), class: "dropdown-item" %></li>
-        <li><%= link_to "Corporate Cups", products_path(product_style: "Cups", category_type: "corporate"), class: "dropdown-item" %></li>
-        <li><%= link_to "Championship Cups", products_path(product_style: "Cups", category_type: "championship"), class: "dropdown-item" %></li>
-        <li><%= link_to "Metal Cups", products_path(product_style: "Cups", material_ids: [2]), class: "dropdown-item" %></li>
-        <li><%= link_to "Glass Cups", products_path(product_style: "Cups", material_ids: [3]), class: "dropdown-item" %></li>
+          <% @cups_qualities_for_menu.each do |quality| %>
+                <li><%= link_to quality.name, cup_quality_path_by_name(quality.name), class: "dropdown-item" %></li>
+          <% end %>
       </ul>
     </li>
 
@@ -93,16 +84,12 @@
       <ul class="dropdown-menu" aria-labelledby="plaquesDropdown">
         <li><%= link_to "View All Plaques", products_path(product_style: "Plaques"), class: "dropdown-item fw-bold" %></li>
         <li><hr class="dropdown-divider"></li>
-        <li><%= link_to "Award Plaques", products_path(product_style: "Plaques", category_type: "award"), class: "dropdown-item" %></li>
-        <li><%= link_to "Recognition Plaques", products_path(product_style: "Plaques", category_type: "recognition"), class: "dropdown-item" %></li>
-        <li><%= link_to "Corporate Plaques", products_path(product_style: "Plaques", category_type: "corporate"), class: "dropdown-item" %></li>
-        <li><%= link_to "Memorial Plaques", products_path(product_style: "Plaques", category_type: "memorial"), class: "dropdown-item" %></li>
-        <li><%= link_to "Wood Plaques", products_path(product_style: "Plaques", material_ids: [4]), class: "dropdown-item" %></li>
-        <li><%= link_to "Acrylic Plaques", products_path(product_style: "Plaques", material_ids: [5]), class: "dropdown-item" %></li>
+          <% @plaques_qualities_for_menu.each do |quality| %>
+              <li><%= link_to quality.name, plaque_quality_path_by_name(quality.name), class: "dropdown-item" %></li>
+          <% end %>
       </ul>
     </li>
-  </ul>
-
+</div>
       <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
         <!-- Search -->
         <li class="nav-item">
@@ -145,8 +132,7 @@
           </li>
         <% end %>
       </ul>
-    </div>
-  </div>
+
 
   <!-- SEARCH BAR DROPDOWN -->
   <div class="w-100 position-absolute top-100 start-0 d-none shadow" data-search-toggle-target="bar" style="background-color: white; z-index: 1050;">
