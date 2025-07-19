@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TrophyMade Admin</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <%= link_to "TrophyMade Admin", admin_root_path, class: "navbar-brand" %>
+
+        <div class="navbar-nav ms-auto">
+          <%= link_to "Dashboard", admin_root_path, class: "nav-link" %>
+          <%= link_to "Orders", admin_orders_path, class: "nav-link" %>
+          <%= link_to "Users", admin_users_path, class: "nav-link" %>
+          <%= link_to "Back to Site", root_path, class: "nav-link" %>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link" %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+      <% if notice %>
+        <div class="alert alert-success alert-dismissible fade show">
+          <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div class="alert alert-danger alert-dismissible fade show">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>
