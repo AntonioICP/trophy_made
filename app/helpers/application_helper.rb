@@ -59,4 +59,20 @@ module ApplicationHelper
     end
   end
 
+  def order_status_color(status)
+    case status.to_s.downcase
+    when 'pending'
+      'warning'
+    when 'processing'
+      'info'
+    when 'shipped'
+      'primary'
+    when 'delivered'
+      'success'
+    when 'cancelled'
+      'danger'
+    else
+      'secondary'
+    end
+  end
 end

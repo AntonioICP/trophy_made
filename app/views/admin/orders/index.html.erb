@@ -1,18 +1,116 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1>Orders Management</h1>
-  <span class="badge bg-primary fs-6"><%= @orders.count %> Total Orders</span>
+  <div class="d-flex gap-2">
+    <span class="badge bg-primary fs-6"><%= @orders.count %> Total Orders</span>
+  </div>
 </div>
 
+<!-- Filters & Search -->
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with url: admin_orders_path, method: :get, local: true, class: "row g-3" do |f| %>
+      <div class="col-md-3">
+        <%= f.text_field :search, placeholder: "Search by order ID, email...", value: params[:search], class: "form-control" %>
+      </div>
+      <div class="col-md-2">
+        <%= f.select :status,
+            options_for_select([
+              ['All Statuses', ''],
+              ['Pending', 'pending'],
+              ['Processing', 'processing'],
+              ['Shipped', 'shipped'],
+              ['Delivered', 'delivered'],
+              ['Cancelled', 'cancelled']
+            ], params[:status]),
+            {}, { class: "form-select" } %>
+      </div>
+      <div class="col-md-2">
+        <%= f.date_field :date_from, value: params[:date_from], class: "form-control", placeholder: "From date" %>
+      </div>
+      <div class="col-md-2">
+        <%= f.date_field :date_to, value: params[:date_to], class: "form-control", placeholder: "To date" %>
+      </div>
+      <div class="col-md-2">
+        <%= f.select :sort_by,
+            options_for_select([
+              ['Newest First', 'created_at_desc'],
+              ['Oldest First', 'created_at_asc'],
+              ['Highest Value', 'total_desc'],
+              ['Lowest Value', 'total_asc']
+            ], params[:sort_by] || 'created_at_desc'),
+            {}, { class: "form-select" } %>
+      </div>
+      <div class="col-md-1">
+        <%= f.submit "Filter", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card bg-warning text-dark">
+      <div class="card-body text-center">
+        <h5><%= @orders.where(status: 'pending').count %></h5>
+        <small>Pending Orders</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body text-center">
+        <h5><%= @orders.where(status: 'processing').count %></h5>
+        <small>Processing</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body text-center">
+        <h5><%= @orders.where(status: 'shipped').count %></h5>
+        <small>Shipped</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body text-center">
+        <h5><%= @orders.where(status: 'delivered').count %></h5>
+        <small>Delivered</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Orders Table -->
 <div class="card">
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Orders List</h5>
+      <div>
+        <!-- Bulk Actions -->
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="selectAll()">Select All</button>
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="bulkAction('cancel')">Bulk Cancel</button>
+          <button type="button" class="btn btn-outline-success btn-sm" onclick="bulkAction('process')">Bulk Process</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
+      <table class="table table-hover">
+        <thead class="table-light">
           <tr>
+            <th width="40px">
+              <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+            </th>
             <th>Order #</th>
             <th>Customer</th>
             <th>Status</th>
             <th>Items</th>
+            <th>Total</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
@@ -20,23 +118,198 @@
         <tbody>
           <% @orders.each do |order| %>
             <tr>
-              <td><strong>#<%= order.id %></strong></td>
-              <td><%= order.user&.email || 'Guest Customer' %></td>
               <td>
-                <span class="badge bg-<%= order.status == 'pending' ? 'warning' : 'success' %>">
-                  <%= order.status.humanize %>
-                </span>
+                <input type="checkbox" class="order-checkbox" value="<%= order.id %>">
               </td>
-              <td><%= order.order_items.count %> items</td>
-              <td><%= order.created_at.strftime("%d %b %Y") %></td>
               <td>
-                <%= link_to "View", admin_order_path(order), class: "btn btn-sm btn-outline-primary" %>
-                <%= link_to "Edit", edit_admin_order_path(order), class: "btn btn-sm btn-outline-secondary" %>
+                <strong>#<%= order.id %></strong>
+                <% if order.created_at > 1.day.ago %>
+                  <span class="badge bg-info ms-1">New</span>
+                <% end %>
+              </td>
+              <td>
+                <div>
+                  <%= order.user&.email || 'Guest Customer' %>
+                  <% if order.user&.first_name.present? %>
+                    <br><small class="text-muted"><%= "#{order.user.first_name} #{order.user.last_name}" %></small>
+                  <% end %>
+                </div>
+              </td>
+              <td>
+                <select class="form-select form-select-sm status-select" data-order-id="<%= order.id %>" style="width: 120px;">
+                  <option value="pending" <%= 'selected' if order.status == 'pending' %>>Pending</option>
+                  <option value="processing" <%= 'selected' if order.status == 'processing' %>>Processing</option>
+                  <option value="shipped" <%= 'selected' if order.status == 'shipped' %>>Shipped</option>
+                  <option value="delivered" <%= 'selected' if order.status == 'delivered' %>>Delivered</option>
+                  <option value="cancelled" <%= 'selected' if order.status == 'cancelled' %>>Cancelled</option>
+                </select>
+              </td>
+              <td>
+                <span class="badge bg-light text-dark"><%= order.order_items.count %> items</span>
+                <br><small class="text-muted"><%= order.order_items.sum(:quantity) %> qty</small>
+              </td>
+              <td>
+                <strong>$<%= order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></strong>
+              </td>
+              <td>
+                <%= order.created_at.strftime("%d %b %Y") %>
+                <br><small class="text-muted"><%= time_ago_in_words(order.created_at) %> ago</small>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <%= link_to admin_order_path(order), class: "btn btn-sm btn-outline-primary" do %>
+                    <i class="fa-solid fa-eye"></i>
+                  <% end %>
+                  <% if order.status == 'shipped' %>
+                    <%= link_to "#", class: "btn btn-sm btn-outline-info", title: "Print Shipping Label" do %>
+                      <i class="fa-solid fa-print"></i>
+                    <% end %>
+                  <% end %>
+                </div>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
+
+    <% if @orders.empty? %>
+      <div class="text-center py-4">
+        <i class="fa-solid fa-box-open text-muted" style="font-size: 3rem;"></i>
+        <h5 class="mt-3">No orders found</h5>
+        <p class="text-muted">Try adjusting your filters or search criteria.</p>
+      </div>
+    <% end %>
   </div>
 </div>
+
+<!-- Pagination -->
+<% if respond_to?(:paginate) %>
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @orders if @orders.respond_to?(:current_page) %>
+  </div>
+<% end %>
+
+<script>
+  // Status change handling
+  document.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', function() {
+      const orderId = this.dataset.orderId;
+      const newStatus = this.value;
+
+      fetch(`/admin/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          order: { status: newStatus }
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showToast(`Order #${orderId} status updated to ${newStatus}`, 'success');
+        }
+      });
+    });
+  });
+
+  // Checkbox functions
+  function toggleSelectAll() {
+    const checkboxes = document.querySelectorAll('.order-checkbox');
+    const selectAll = document.getElementById('selectAllCheckbox');
+    checkboxes.forEach(cb => cb.checked = selectAll.checked);
+  }
+
+  function selectAll() {
+    document.getElementById('selectAllCheckbox').checked = true;
+    toggleSelectAll();
+  }
+
+  function bulkAction(action) {
+    const selected = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+
+    if (selected.length === 0) {
+      alert('Please select orders first');
+      return;
+    }
+
+    if (action === 'cancel') {
+      if (confirm(`Are you sure you want to cancel ${selected.length} orders? This action cannot be undone.`)) {
+        bulkCancel(selected);
+      }
+    } else if (action === 'process') {
+      if (confirm(`Are you sure you want to mark ${selected.length} orders as processing?`)) {
+        bulkProcess(selected);
+      }
+    }
+  }
+
+  function bulkCancel(orderIds) {
+    fetch('/admin/orders/bulk_cancel', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        order_ids: orderIds
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showToast(data.message, 'success');
+        // Reload the page to show updated statuses
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        showToast(data.message, 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showToast('An error occurred while cancelling orders', 'error');
+    });
+  }
+
+  function bulkProcess(orderIds) {
+    // Implementation for bulk processing - similar to bulk cancel
+    console.log('Bulk processing:', orderIds);
+    showToast('Bulk processing feature coming soon', 'info');
+  }
+
+  function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type} position-fixed`;
+    toast.style.cssText = `
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      width: 350px;
+      padding: 10px 16px;
+      height: 40px;
+      font-size: 13px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      position: fixed;
+    `;
+
+    toast.innerHTML = `
+      <div style="flex: 1; padding-right: 20px;">${message}</div>
+      <button type="button" class="btn-close btn-close-sm" onclick="this.parentElement.remove()" style="position: absolute; top: 8px; right: 8px;"></button>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      if (toast.parentElement) {
+        toast.remove();
+      }
+    }, 4000);
+  }
+</script>

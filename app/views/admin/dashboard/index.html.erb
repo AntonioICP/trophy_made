@@ -3,31 +3,65 @@
 <div class="row">
   <div class="col-12 text-center">
     <h1>Admin Dashboard</h1>
+    <p class="text-muted">Welcome back! Here's an overview of your store.</p>
   </div>
 </div>
 
 <div class="row mb-4 justify-content-center">
   <div class="col-md-3">
-    <div class="card text-white bg-primary">
-      <div class="card-body">
-        <h5 class="card-title">Total Orders</h5>
-        <h2><%= @total_orders %></h2>
+    <div class="card bg-primary text-white">
+      <div class="card-body text-center">
+        <h3><%= Order.count %></h3>
+        <p class="mb-0">Total Orders</p>
       </div>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card text-white bg-warning">
-      <div class="card-body">
-        <h5 class="card-title">Pending Orders</h5>
-        <h2><%= @pending_orders %></h2>
+    <div class="card bg-warning text-dark">
+      <div class="card-body text-center">
+        <h3><%= Order.where(status: 'pending').count %></h3>
+        <p class="mb-0">Pending Orders</p>
       </div>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card text-white bg-success">
+    <div class="card bg-success text-white">
+      <div class="card-body text-center">
+        <h3><%= User.count %></h3>
+        <p class="mb-0">Total Users</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4 justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Quick Actions</h5>
+      </div>
       <div class="card-body">
-        <h5 class="card-title">Total Users</h5>
-        <h2><%= @total_users %></h2>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <%= link_to admin_orders_path, class: "btn btn-lg w-100", style: "background-color: #0D2149; color: white;" do %>
+              <i class="fa-solid fa-box me-2"></i>
+              Manage Orders
+            <% end %>
+          </div>
+          <div class="col-md-4">
+            <%= link_to admin_products_path, class: "btn btn-outline-primary btn-lg w-100" do %>
+              <i class="fa-solid fa-trophy me-2"></i>
+              Manage Products
+            <% end %>
+          </div>
+          <div class="col-md-4">
+            <%= link_to admin_users_path, class: "btn btn-outline-primary btn-lg w-100" do %>
+              <i class="fa-solid fa-users me-2"></i>
+              Manage Users
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -36,40 +70,46 @@
 <div class="row justify-content-center">
   <div class="col-md-8">
     <div class="card">
-      <div class="card-header">
-        <h5>Recent Orders</h5>
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Orders (Last 10)</h5>
+        <%= link_to "View All Orders", admin_orders_path, class: "btn btn-outline-primary btn-sm" %>
       </div>
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Order #</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @recent_orders.each do |order| %>
+        <% recent_orders = Order.limit(10).order(created_at: :desc) %>
+        <% if recent_orders.any? %>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
                 <tr>
-                  <td>#<%= order.id %></td>
-                  <td><%= order.user&.email || 'Guest' %></td>
-                  <td>
-                    <span class="badge bg-<%= order.status == 'pending' ? 'warning' : 'success' %>">
-                      <%= order.status.humanize %>
-                    </span>
-                  </td>
-                  <td><%= order.created_at.strftime("%d %b %Y") %></td>
-                  <td>
-                    <%= link_to "View", admin_order_path(order), class: "btn btn-sm btn-outline-primary" %>
-                  </td>
+                  <th>Order #</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th>Date</th>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                <% recent_orders.each do |order| %>
+                  <tr>
+                    <td>
+                      <%= link_to "##{order.id}", admin_order_path(order), class: "text-decoration-none" %>
+                    </td>
+                    <td><%= order.user&.email || 'Guest' %></td>
+                    <td>
+                      <span class="badge bg-<%= order_status_color(order.status) %>">
+                        <%= order.status.capitalize %>
+                      </span>
+                    </td>
+                    <td>$<%= order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></td>
+                    <td><%= time_ago_in_words(order.created_at) %> ago</td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted text-center py-3">No orders yet</p>
+        <% end %>
       </div>
     </div>
   </div>

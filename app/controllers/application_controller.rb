@@ -6,12 +6,28 @@ class ApplicationController < ActionController::Base
 
   def current_order
     @current_order ||= if current_user
-      # For logged-in users, find or create an order associated with the user
-      current_user.orders.find_or_create_by(status: "pending")
+      # Always look for the most recent pending order, create if none exists
+      current_user.orders.where(status: "pending").last ||
+      current_user.orders.create!(status: "pending")
     else
-      # For guest users, use session-based orders
-      Order.find_or_create_by(id: session[:order_id], status: "pending").tap do |order|
-        session[:order_id] = order.id
+      # For guests, handle session-based orders
+      if session[:order_id].present?
+        order = Order.find_by(id: session[:order_id])
+
+        # If order exists and is still pending, use it
+        if order&.status == "pending"
+          order
+        else
+          # Create new order and update session
+          new_order = Order.create!(status: "pending")
+          session[:order_id] = new_order.id
+          new_order
+        end
+      else
+        # Create new order for guest
+        new_order = Order.create!(status: "pending")
+        session[:order_id] = new_order.id
+        new_order
       end
     end
   end
@@ -33,7 +49,9 @@ class ApplicationController < ActionController::Base
     guest_order = Order.find_by(id: session[:order_id], status: "pending")
     return unless guest_order&.order_items&.any?
 
-    user_order = current_user.orders.find_or_create_by(status: "pending")
+    # FIX: Don't use find_or_create_by, use the same logic as current_order
+    user_order = current_user.orders.where(status: "pending").last ||
+                 current_user.orders.create!(status: "pending")
 
     guest_order.order_items.each do |guest_item|
       # Check if user already has this product in their cart
