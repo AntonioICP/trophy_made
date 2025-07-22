@@ -329,6 +329,12 @@ class CurvedTextApp {
         this.createInitialText();
         this.bindEvents();
         this.logCanvasJSON();
+        // this.saveDesign();
+        const saveButton = document.getElementById('saveDesign');
+        if (saveButton) {
+          console.log("HOLA")
+          saveButton.addEventListener('click', () => this.saveDesign());
+        }
       };
     });
   }
@@ -344,7 +350,8 @@ class CurvedTextApp {
       kerning: document.getElementById('kerning'),
       flip: document.getElementById('flip'),
       addToCanvas: document.getElementById('addToCanvas'),
-      deleteButton: document.getElementById('deleteButton')
+      deleteButton: document.getElementById('deleteButton'),
+      // saveDesign: document.getElementById('saveDesign')
     };
   }
 
@@ -614,6 +621,70 @@ class CurvedTextApp {
     return JSON.stringify(this.fcanvas.toJSON());
   }
 
+  saveDesign() {
+
+  console.log("Saving to Cloudinary...")
+
+    // Get canvas data
+    const dataURL = this.fcanvas.toDataURL('image/png');
+
+    fetch('/user_designs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        user_design: {
+          image_data: dataURL,
+          product_id: window.location.pathname.split('/')[2] // Get product ID from URL
+        }
+      })
+    }).then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Design saved to Cloudinary!");
+          console.log("Cloudinary URL:", data.cloudinary_url);
+        } else {
+          alert("Error saving design.");
+          console.error(data.errors);
+        }
+      });
+  }
+
+
+
+  //   console.log("HELLO")
+  // // Set the background image as the fabric canvas background
+  //   const bgImg = document.querySelector('.img-design');
+
+  //   fabric.Image.fromURL(bgImg.src, (img) => {
+  //     // Scale the image to fit the canvas
+  //     img.scaleToWidth(this.fcanvas.width);
+  //     img.scaleToHeight(this.fcanvas.height);
+
+  //     // Set as background
+  //     this.fcanvas.setBackgroundImage(img, () => {
+  //       // Export with background included
+  //       const dataURL = this.fcanvas.toDataURL({
+  //         format: 'png',
+  //         quality: 1,
+  //         multiplier: 1
+  //       });
+
+  //       // Download
+  //       const link = document.createElement('a');
+  //       link.download = `trophy-design-${Date.now()}.png`;
+  //       link.href = dataURL;
+  //       link.click();
+
+  //       // Remove background after export (optional)
+  //       this.fcanvas.setBackgroundImage(null, this.fcanvas.renderAll.bind(this.fcanvas));
+  //     });
+  //   }, { crossOrigin: 'anonymous' });
+
+
+
   /**
    * Load canvas from JSON
    * @param {string} jsonString - Canvas JSON string
@@ -630,5 +701,5 @@ class CurvedTextApp {
 }
 
 // Initialize application
-const curvedTextApp = new CurvedTextApp();
-curvedTextApp.init();
+  const curvedTextApp = new CurvedTextApp();
+  curvedTextApp.init();
