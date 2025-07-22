@@ -1,48 +1,121 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-5 col-lg-4">
-      <div class="card shadow">
-        <div class="card-body p-4">
-          <h2 class="text-center mb-4">Edit Profile</h2>
+<div class="auth-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-8">
+        <div class="auth-card">
+          <!-- Header -->
+          <div class="auth-header">
+            <div class="user-avatar">
+              <%= current_user.email.first.upcase %>
+            </div>
+            <h2>Account Settings</h2>
+            <p class="text-muted">Update your email and password</p>
+          </div>
 
-          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
             <%= render "devise/shared/error_messages", resource: resource %>
 
-            <div class="mb-3">
-              <%= f.label :email, class: "form-label" %>
-              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+            <!-- Email Section -->
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <h4>Email Address</h4>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :email, "Email Address", class: "form-label" %>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "modern-input" %>
+                <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                  <small class="form-text text-muted">
+                    Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+                  </small>
+                <% end %>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <%= f.label :password, "New password", class: "form-label" %>
-              <small class="form-text text-muted">Leave blank if you don't want to change it</small>
-              <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+            <!-- Password Section -->
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fa-solid fa-key"></i>
+                </div>
+                <h4>Change Password</h4>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <%= f.label :password, "New Password", class: "form-label optional" %>
+                  <%= f.password_field :password, autocomplete: "new-password", class: "modern-input", placeholder: "Leave blank if you don't want to change it" %>
+                  <% if @minimum_password_length %>
+                    <small class="form-text text-muted"><%= @minimum_password_length %> characters minimum</small>
+                  <% end %>
+                </div>
+
+                <div class="form-group">
+                  <%= f.label :password_confirmation, "Confirm New Password", class: "form-label optional" %>
+                  <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "modern-input", placeholder: "Confirm your new password" %>
+                </div>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <%= f.label :password_confirmation, class: "form-label" %>
-              <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+            <!-- Current Password Section -->
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fa-solid fa-shield-alt"></i>
+                </div>
+                <h4>Confirm Changes</h4>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :current_password, "Current Password", class: "form-label" %>
+                <%= f.password_field :current_password, autocomplete: "current-password", class: "modern-input", placeholder: "Enter your current password to confirm changes" %>
+                <small class="form-text text-muted">We need your current password to confirm your changes</small>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <%= f.label :current_password, class: "form-label" %>
-              <small class="form-text text-muted">We need your current password to confirm your changes</small>
-              <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+            <!-- Security Notice -->
+            <div class="security-notice mb-4">
+              <i class="fa-solid fa-shield-alt"></i>
+              <div class="notice-content">
+                <span>Your account information is encrypted and secure</span>
+              </div>
             </div>
 
-            <div class="d-grid mb-3">
-              <%= f.submit "Update", class: "btn btn-primary" %>
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 mb-4">
+              <%= link_to profile_path, class: "btn btn-outline flex-fill" do %>
+                <i class="fa-solid fa-arrow-left me-2"></i>
+                Back to Profile
+              <% end %>
+
+              <%= f.submit "Update Account", class: "btn btn-secondary flex-fill" %>
             </div>
           <% end %>
 
-          <hr>
-          <div class="text-center">
-            <p class="text-muted">Unhappy?</p>
-            <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-outline-danger btn-sm" %>
-          </div>
+          <!-- Danger Zone -->
+          <div class="border-top pt-4">
+            <div class="section-header mb-3">
+              <div class="section-icon" style="background: var(--danger-color); color: white;">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+              </div>
+              <h4 style="color: var(--danger-color);">Danger Zone</h4>
+            </div>
 
-          <div class="text-center mt-3">
-            <%= link_to "Back", :back, class: "btn btn-outline-secondary btn-sm" %>
+            <div class="alert alert-danger d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Delete Account</strong><br>
+                <small>Permanently delete your account and all associated data. This action cannot be undone.</small>
+              </div>
+              <%= button_to "Delete Account", registration_path(resource_name),
+                  data: {
+                    turbo_confirm: "Are you sure you want to delete your account? This action cannot be undone.",
+                    turbo_method: :delete
+                  },
+                  class: "btn btn-danger" %>
+            </div>
           </div>
         </div>
       </div>

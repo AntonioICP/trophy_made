@@ -1,38 +1,118 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-5 col-lg-4">
-      <div class="card shadow">
-        <div class="card-body p-4">
-          <h2 class="text-center mb-4">Sign up</h2>
-
-          <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-            <%= render "devise/shared/error_messages", resource: resource %>
-
-            <div class="mb-3">
-              <%= f.label :email, class: "form-label" %>
-              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+<div class="auth-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-xl-5">
+        <div class="auth-card">
+          <!-- Header -->
+          <div class="auth-header">
+            <div class="auth-icon">
+              <i class="fa-solid fa-user-plus"></i>
             </div>
+            <h2>Create Your Account</h2>
+            <p class="text-muted">Join TrophyMade and start shopping for amazing awards</p>
+          </div>
 
-            <div class="mb-3">
-              <%= f.label :password, class: "form-label" %>
-              <% if @minimum_password_length %>
-                <small class="form-text text-muted"><%= @minimum_password_length %> characters minimum</small>
-              <% end %>
-              <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :password_confirmation, class: "form-label" %>
-              <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
-            </div>
-
-            <div class="d-grid mb-3">
-              <%= f.submit "Sign up", class: "btn btn-primary" %>
+          <!-- Show message if coming from checkout -->
+          <% if params[:checkout] == 'true' %>
+            <div class="checkout-notice">
+              <i class="fa-solid fa-shopping-cart"></i>
+              <div class="notice-content">
+                <strong>Almost there!</strong>
+                <span>Create an account to complete your checkout securely.</span>
+              </div>
             </div>
           <% end %>
 
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), class: "auth-form") do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <!-- Account Information Section -->
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <h4>Account Information</h4>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :email, "Email Address", class: "form-label" %>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "modern-input", placeholder: "Enter your email address" %>
+              </div>
+            </div>
+
+            <!-- Personal Information Section -->
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <h4>Personal Information</h4>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <%= f.label :first_name, "First Name", class: "form-label" %>
+                  <%= f.text_field :first_name, class: "modern-input", placeholder: "Enter first name" %>
+                </div>
+
+                <div class="form-group">
+                  <%= f.label :last_name, "Last Name", class: "form-label" %>
+                  <%= f.text_field :last_name, class: "modern-input", placeholder: "Enter last name" %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :phone, "Phone Number", class: "form-label optional" %>
+                <%= f.telephone_field :phone, class: "modern-input", placeholder: "(04) 1234 5678" %>
+              </div>
+            </div>
+
+            <!-- Password Section -->
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fa-solid fa-key"></i>
+                </div>
+                <h4>Create Password</h4>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <%= f.label :password, "Password", class: "form-label" %>
+                  <%= f.password_field :password, autocomplete: "new-password", class: "modern-input", placeholder: "Create a secure password" %>
+                  <% if @minimum_password_length %>
+                    <small class="form-text text-muted"><%= @minimum_password_length %> characters minimum</small>
+                  <% end %>
+                </div>
+
+                <div class="form-group">
+                  <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
+                  <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "modern-input", placeholder: "Confirm your password" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="security-notice">
+              <i class="fa-solid fa-shield-alt"></i>
+              <div class="notice-content">
+                <span>Your information is encrypted and secure</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-4">
+              <%= f.submit "Create Account", class: "btn btn-secondary btn-lg" %>
+            </div>
+          <% end %>
+
+          <!-- Sign In Link -->
           <div class="text-center">
-            <%= render "devise/shared/links" %>
+            <p class="mb-0">
+              Already have an account?
+              <%= link_to "Sign in here", new_session_path(resource_name), class: "fw-bold" %>
+            </p>
           </div>
         </div>
       </div>

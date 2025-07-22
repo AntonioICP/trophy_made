@@ -1,0 +1,605 @@
+<div class="checkout-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <!-- Progress Steps -->
+        <div class="progress-steps mb-5">
+          <div class="step completed">
+            <div class="step-icon">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <span>Cart</span>
+          </div>
+          <div class="step-line completed"></div>
+          <div class="step active">
+            <div class="step-icon">
+              <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <span>Checkout</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-icon">
+              <i class="fa-solid fa-check-circle"></i>
+            </div>
+            <span>Complete</span>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- Main Checkout Form -->
+          <div class="col-lg-8">
+            <div class="checkout-card">
+              <!-- Header -->
+              <div class="checkout-header">
+                <h2>Complete Your Order</h2>
+                <div class="user-info">
+                  <div class="avatar">
+                    <%= current_user.email.first.upcase %>
+                  </div>
+                  <span>Welcome back, <strong><%= current_user.email.split('@').first %></strong></span>
+                </div>
+              </div>
+
+              <%= form_with(model: @order, url: orders_path, method: :post, class: "checkout-form") do |form| %>
+                <!-- Contact Information -->
+                <div class="form-section">
+                  <div class="section-header">
+                    <div class="section-icon">
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h4>Contact Information</h4>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <%= form.label :first_name, "First Name", class: "form-label" %>
+                      <%= form.text_field :first_name, value: current_user.first_name, placeholder: "Enter first name", class: "modern-input" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :last_name, "Last Name", class: "form-label" %>
+                      <%= form.text_field :last_name, value: current_user.last_name, placeholder: "Enter last name", class: "modern-input" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :email, "Email Address", class: "form-label" %>
+                      <%= form.email_field :email, value: current_user.email, class: "modern-input readonly", readonly: true %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :phone, "Phone Number", class: "form-label" %>
+                      <%= form.telephone_field :phone, value: current_user.phone, placeholder: "(04) 1234 5678", class: "modern-input" %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="form-section">
+                  <div class="section-header">
+                    <div class="section-icon">
+                      <i class="fa-solid fa-truck"></i>
+                    </div>
+                    <h4>Shipping Address</h4>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group full-width">
+                      <%= form.label :address_line_1, "Street Address", class: "form-label" %>
+                      <%= form.text_field :address_line_1, value: current_user.address_line_1, placeholder: "123 Main Street", class: "modern-input" %>
+                    </div>
+                    <div class="form-group full-width">
+                      <%= form.label :address_line_2, "Apartment/Unit", class: "form-label optional" %>
+                      <%= form.text_field :address_line_2, value: current_user.address_line_2, placeholder: "Apt 4B (Optional)", class: "modern-input" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :city, "City", class: "form-label" %>
+                      <%= form.text_field :city, value: current_user.city, placeholder: "Sydney", class: "modern-input" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :state, "State", class: "form-label" %>
+                      <%= form.select :state, [
+                        ['Choose state...', ''],
+                        ['Queensland (QLD)', 'QLD'],
+                        ['New South Wales (NSW)', 'NSW'],
+                        ['Victoria (VIC)', 'VIC'],
+                        ['Western Australia (WA)', 'WA'],
+                        ['South Australia (SA)', 'SA'],
+                        ['Tasmania (TAS)', 'TAS'],
+                        ['Australian Capital Territory (ACT)', 'ACT'],
+                        ['Northern Territory (NT)', 'NT']
+                      ], { selected: current_user.state }, { class: "modern-select" } %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :postal_code, "Postcode", class: "form-label" %>
+                      <%= form.text_field :postal_code, value: current_user.postal_code, placeholder: "2000", class: "modern-input" %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Details -->
+                <div class="form-section">
+                  <div class="section-header">
+                    <div class="section-icon">
+                      <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <h4>Payment Details</h4>
+                    <div class="payment-icons">
+                      <i class="fa-brands fa-cc-visa"></i>
+                      <i class="fa-brands fa-cc-mastercard"></i>
+                      <i class="fa-brands fa-cc-apple-pay"></i>
+                    </div>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group full-width">
+                      <%= form.label :card_holder_name, "Cardholder Name", class: "form-label" %>
+                      <%= form.text_field :card_holder_name, placeholder: "Name as it appears on card", class: "modern-input" %>
+                    </div>
+                    <div class="form-group full-width">
+                      <%= form.label :card_number, "Card Number", class: "form-label" %>
+                      <%= form.text_field :card_number, placeholder: "1234 5678 9012 3456", class: "modern-input" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :expiry_date, "Expiry Date", class: "form-label" %>
+                      <%= form.text_field :expiry_date, placeholder: "MM/YY", class: "modern-input" %>
+                    </div>
+                    <div class="form-group">
+                      <%= form.label :cvc, "Security Code", class: "form-label" %>
+                      <%= form.text_field :cvc, placeholder: "123", class: "modern-input" %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="security-notice">
+                  <i class="fa-solid fa-shield-alt"></i>
+                  <span>Your payment information is encrypted and secure</span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="checkout-btn">
+                  <i class="fa-solid fa-lock"></i>
+                  Complete Purchase
+                  <span class="btn-total">$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                </button>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Order Summary Sidebar -->
+          <div class="col-lg-4">
+            <div class="order-summary-card sticky-top">
+              <h4>Order Summary</h4>
+
+              <div class="order-items">
+                <% @order.order_items.each do |item| %>
+                  <div class="order-item">
+                    <div class="item-image">
+                      <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="item-details">
+                      <h6><%= item.product.name %></h6>
+                      <span class="quantity">Qty: <%= item.quantity %></span>
+                    </div>
+                    <div class="item-price">
+                      $<%= ((item.product.price || 0) * item.quantity).round(2) %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="summary-totals">
+                <div class="subtotal">
+                  <span>Subtotal</span>
+                  <span>$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                </div>
+                <div class="shipping">
+                  <span>Shipping</span>
+                  <span class="free">Free</span>
+                </div>
+                <div class="total">
+                  <span>Total</span>
+                  <span>$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                </div>
+              </div>
+
+              <div class="trust-badges">
+                <div class="badge">
+                  <i class="fa-solid fa-truck"></i>
+                  <span>Free Shipping</span>
+                </div>
+                <div class="badge">
+                  <i class="fa-solid fa-undo"></i>
+                  <span>30-Day Returns</span>
+                </div>
+                <div class="badge">
+                  <i class="fa-solid fa-shield-alt"></i>
+                  <span>Secure Payment</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+:root {
+  --primary-color: #0D2149;
+  --secondary-color: #F4B942;
+  --bg-light: #f8f9fa;
+  --border-color: #e9ecef;
+  --text-muted: #6c757d;
+  --success-color: #198754;
+}
+
+.checkout-container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Progress Steps */
+.progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.step.completed .step-icon {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+
+.step-line {
+  width: 80px;
+  height: 2px;
+  background: var(--border-color);
+  margin: 0 20px;
+}
+
+.step-line.completed {
+  background: var(--success-color);
+}
+
+.step span {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.step.active span {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Cards */
+.checkout-card, .order-summary-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  padding: 2rem;
+  border: none;
+}
+
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.checkout-header h2 {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.section-header h4 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.payment-icons i {
+  font-size: 24px;
+  opacity: 0.7;
+}
+
+.fa-cc-visa { color: #1a237e; }
+.fa-cc-mastercard { color: #ff9800; }
+.fa-cc-apple-pay { color: #000; }
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-label.optional::after {
+  content: " (Optional)";
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.modern-input, .modern-select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.modern-input:focus, .modern-select:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(244, 185, 66, 0.1);
+}
+
+.modern-input.readonly {
+  background: var(--bg-light);
+  color: var(--text-muted);
+}
+
+/* Security Notice */
+.security-notice {
+  display: flex;
+  align-items: center;
+  background: #f0f9f0;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: var(--success-color);
+  font-size: 14px;
+  gap: 10px;
+}
+
+/* Checkout Button */
+.checkout-btn {
+  width: 100%;
+  background: linear-gradient(45deg, var(--secondary-color), #ffb74d);
+  color: var(--primary-color);
+  border: none;
+  padding: 18px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.checkout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(244, 185, 66, 0.3);
+}
+
+.btn-total {
+  margin-left: auto;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+/* Order Summary */
+.order-summary-card h4 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.order-items {
+  margin-bottom: 1.5rem;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.item-image {
+  width: 50px;
+  height: 50px;
+  background: var(--bg-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: var(--secondary-color);
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-details h6 {
+  margin: 0 0 4px 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.quantity {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.item-price {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+/* Summary Totals */
+.summary-totals {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.subtotal, .shipping, .total {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.total {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary-color);
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.free {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+/* Trust Badges */
+.trust-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.badge i {
+  color: var(--success-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .progress-steps {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-line {
+    width: 2px;
+    height: 30px;
+    margin: 0;
+  }
+}
+</style>

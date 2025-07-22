@@ -1,90 +1,182 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow">
-        <div class="card-body p-4">
-          <h2 class="text-center mb-4">Edit Profile</h2>
+<div class="profile-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <div class="row g-4">
+          <!-- Main Edit Form -->
+          <div class="col-lg-8">
+            <div class="profile-card">
+              <!-- Header -->
+              <div class="profile-header">
+                <div class="user-avatar">
+                  <%= current_user.email.first.upcase %>
+                </div>
+                <div class="user-info">
+                  <h2>Edit Profile</h2>
+                  <p class="text-muted">Update your account information and preferences</p>
+                </div>
+              </div>
 
-          <%= form_with model: @user, url: profile_path, method: :patch do |f| %>
-            <% if @user.errors.any? %>
-              <div class="alert alert-danger">
-                <h4><%= pluralize(@user.errors.count, "error") %> prohibited this profile from being saved:</h4>
-                <ul class="mb-0">
-                  <% @user.errors.full_messages.each do |message| %>
-                    <li><%= message %></li>
+              <%= form_with model: @user, url: profile_path, method: :patch, class: "profile-form" do |f| %>
+                <% if @user.errors.any? %>
+                  <div class="alert alert-danger">
+                    <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                    <strong><%= pluralize(@user.errors.count, "error") %> prohibited this profile from being saved:</strong>
+                    <ul class="mb-0 mt-2">
+                      <% @user.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <!-- Contact Information Section -->
+                <div class="form-section">
+                  <div class="section-header">
+                    <div class="section-icon">
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h4>Contact Information</h4>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <%= f.label :first_name, "First Name", class: "form-label" %>
+                      <%= f.text_field :first_name, class: "modern-input", placeholder: "Enter first name" %>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :last_name, "Last Name", class: "form-label" %>
+                      <%= f.text_field :last_name, class: "modern-input", placeholder: "Enter last name" %>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :email, "Email Address", class: "form-label" %>
+                      <%= f.email_field :email, class: "modern-input readonly", readonly: true %>
+                      <small class="form-text text-muted">Email cannot be changed from this page</small>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :phone, "Phone Number", class: "form-label" %>
+                      <%= f.telephone_field :phone, class: "modern-input", placeholder: "(04) 1234 5678" %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Address Information Section -->
+                <div class="form-section">
+                  <div class="section-header">
+                    <div class="section-icon">
+                      <i class="fa-solid fa-home"></i>
+                    </div>
+                    <h4>Address Information</h4>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group full-width">
+                      <%= f.label :address_line_1, "Street Address", class: "form-label" %>
+                      <%= f.text_field :address_line_1, class: "modern-input", placeholder: "123 Main Street" %>
+                    </div>
+
+                    <div class="form-group full-width">
+                      <%= f.label :address_line_2, "Apartment/Unit", class: "form-label optional" %>
+                      <%= f.text_field :address_line_2, class: "modern-input", placeholder: "Apt 4B (Optional)" %>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :city, "City", class: "form-label" %>
+                      <%= f.text_field :city, class: "modern-input", placeholder: "Sydney" %>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :state, "State", class: "form-label" %>
+                      <%= f.select :state, [
+                            ['Choose state...', ''],
+                            ['Queensland (QLD)', 'QLD'],
+                            ['New South Wales (NSW)', 'NSW'],
+                            ['Victoria (VIC)', 'VIC'],
+                            ['Western Australia (WA)', 'WA'],
+                            ['South Australia (SA)', 'SA'],
+                            ['Tasmania (TAS)', 'TAS'],
+                            ['Australian Capital Territory (ACT)', 'ACT'],
+                            ['Northern Territory (NT)', 'NT']
+                          ], { selected: @user.state }, { class: "modern-select" } %>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :postal_code, "Postcode", class: "form-label" %>
+                      <%= f.text_field :postal_code, class: "modern-input", placeholder: "2000" %>
+                    </div>
+
+                    <div class="form-group">
+                      <%= f.label :country, "Country", class: "form-label" %>
+                      <%= f.text_field :country, class: "modern-input", placeholder: "Australia", value: (@user.country.present? ? @user.country : "Australia") %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                  <%= link_to profile_path, class: "btn-cancel" do %>
+                    <i class="fa-solid fa-times me-2"></i>
+                    Cancel
                   <% end %>
-                </ul>
-              </div>
-            <% end %>
 
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :first_name, class: "form-label" %>
-                  <%= f.text_field :first_name, class: "form-control" %>
+                  <%= f.submit "Update Profile", class: "btn-save" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Help Sidebar -->
+          <div class="col-lg-4">
+            <div class="help-card sticky-top">
+              <h4>Profile Help</h4>
+
+              <div class="help-items">
+                <div class="help-item">
+                  <div class="help-icon">
+                    <i class="fa-solid fa-info-circle"></i>
+                  </div>
+                  <div class="help-content">
+                    <h6>Contact Information</h6>
+                    <small>Keep your contact details up-to-date for order notifications and support.</small>
+                  </div>
+                </div>
+
+                <div class="help-item">
+                  <div class="help-icon">
+                    <i class="fa-solid fa-map-marker-alt"></i>
+                  </div>
+                  <div class="help-content">
+                    <h6>Shipping Address</h6>
+                    <small>Adding your address speeds up checkout and ensures accurate delivery.</small>
+                  </div>
+                </div>
+
+                <div class="help-item">
+                  <div class="help-icon">
+                    <i class="fa-solid fa-shield-alt"></i>
+                  </div>
+                  <div class="help-content">
+                    <h6>Privacy & Security</h6>
+                    <small>Your information is encrypted and never shared with third parties.</small>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :last_name, class: "form-label" %>
-                  <%= f.text_field :last_name, class: "form-control" %>
-                </div>
+
+              <div class="support-section">
+                <h6>Need Help?</h6>
+                <p class="small text-muted mb-3">
+                  If you're having trouble updating your profile, our support team is here to help.
+                </p>
+                <a href="mailto:support@trophymade.com" class="support-link">
+                  <i class="fa-solid fa-envelope me-2"></i>
+                  Contact Support
+                </a>
               </div>
             </div>
-
-            <div class="mb-3">
-              <%= f.label :email, class: "form-label" %>
-              <%= f.email_field :email, class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :phone, class: "form-label" %>
-              <%= f.telephone_field :phone, class: "form-control" %>
-            </div>
-
-            <h5 class="mt-4 mb-3">Address Information</h5>
-
-            <div class="mb-3">
-              <%= f.label :address_line_1, "Address Line 1", class: "form-label" %>
-              <%= f.text_field :address_line_1, class: "form-control" %>
-            </div>
-
-            <div class="mb-3">
-              <%= f.label :address_line_2, "Address Line 2", class: "form-label" %>
-              <%= f.text_field :address_line_2, class: "form-control" %>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :city, class: "form-label" %>
-                  <%= f.text_field :city, class: "form-control" %>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="mb-3">
-                  <%= f.label :state, class: "form-label" %>
-                  <%= f.text_field :state, class: "form-control" %>
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="mb-3">
-                  <%= f.label :postal_code, class: "form-label" %>
-                  <%= f.text_field :postal_code, class: "form-control" %>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <%= f.label :country, class: "form-label" %>
-              <%= f.text_field :country, class: "form-control" %>
-            </div>
-
-            <div class="d-flex justify-content-between">
-              <%= link_to "Cancel", profile_path, class: "btn btn-outline-secondary" %>
-              <%= f.submit "Update Profile", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+          </div>
         </div>
       </div>
     </div>

@@ -1,20 +1,15 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: %i[edit update show destroy]
 
-
   def index
-    @orders = Order.all
+    @orders = current_user.orders if current_user
   end
 
   def show
-    if @order.session_id == session[:session_id]
-      @order
-    else
-      redirect_to root_path, notice: "Not your order!"
-    end
   end
 
   def new
+    @product = Product.find(params[:product_id])
     @order = Order.new
   end
 
@@ -41,6 +36,27 @@ class OrdersController < ApplicationController
   def destroy
     @order.destroy
     redirect_to orders_path, status: :see_other, notice: "Order deleted!"
+  end
+
+  def checkout
+    @order = current_order
+
+    # Redirect to cart if no items
+    if @order.nil? || @order.order_items.empty?
+      redirect_to cart_path, alert: 'Your cart is empty'
+      return
+    end
+
+    # Redirect to login if user is not signed in
+    unless user_signed_in?
+      # Store the checkout path so user returns here after login
+      store_location_for(:user, request.fullpath)
+      redirect_to new_user_session_path, alert: 'Please sign in to continue with checkout'
+      return
+    end
+
+    # User is logged in and has items - proceed to checkout
+    # This will render app/views/orders/checkout.html.erb
   end
 
   private

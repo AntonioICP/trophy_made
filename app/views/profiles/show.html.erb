@@ -1,47 +1,171 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow">
-        <div class="card-body p-4">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>My Profile</h2>
-            <%= link_to "Edit Profile", edit_profile_path, class: "btn btn-outline-primary" %>
+<div class="profile-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <div class="row g-4">
+          <!-- Main Profile Card -->
+          <div class="col-lg-8">
+            <div class="profile-card">
+              <!-- Header -->
+              <div class="profile-header">
+                <div class="user-avatar">
+                  <%= current_user.email.first.upcase %>
+                </div>
+                <div class="user-info">
+                  <h2>My Profile</h2>
+                  <p class="text-muted">Manage your account information and preferences</p>
+                </div>
+                <div class="header-actions">
+                  <%= link_to edit_profile_path, class: "edit-btn" do %>
+                    <i class="fa-solid fa-edit me-2"></i>
+                    Edit Profile
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Contact Information Section -->
+              <div class="profile-section">
+                <div class="section-header">
+                  <div class="section-icon">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <h4>Contact Information</h4>
+                </div>
+
+                <div class="info-grid">
+                  <div class="info-item">
+                    <span class="info-label">Email Address</span>
+                    <span class="info-value"><%= current_user.email %></span>
+                  </div>
+
+                  <div class="info-item">
+                    <span class="info-label">First Name</span>
+                    <span class="info-value">
+                      <%= current_user.first_name.present? ? current_user.first_name : "Not provided" %>
+                    </span>
+                  </div>
+
+                  <div class="info-item">
+                    <span class="info-label">Last Name</span>
+                    <span class="info-value">
+                      <%= current_user.last_name.present? ? current_user.last_name : "Not provided" %>
+                    </span>
+                  </div>
+
+                  <div class="info-item">
+                    <span class="info-label">Phone Number</span>
+                    <span class="info-value">
+                      <%= current_user.phone.present? ? current_user.phone : "Not provided" %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Address Information Section -->
+              <div class="profile-section">
+                <div class="section-header">
+                  <div class="section-icon">
+                    <i class="fa-solid fa-home"></i>
+                  </div>
+                  <h4>Address Information</h4>
+                </div>
+
+                <% if current_user.address_line_1.present? %>
+                  <div class="address-display">
+                    <div class="address-line"><%= current_user.address_line_1 %></div>
+                    <% if current_user.address_line_2.present? %>
+                      <div class="address-line"><%= current_user.address_line_2 %></div>
+                    <% end %>
+                    <div class="address-line">
+                      <%= current_user.city %>, <%= current_user.state %> <%= current_user.postal_code %>
+                    </div>
+                    <div class="address-line"><%= current_user.country %></div>
+                  </div>
+                <% else %>
+                  <div class="empty-state">
+                    <i class="fa-solid fa-map-marker-alt"></i>
+                    <p>No address on file</p>
+                    <small class="text-muted">Add your address to speed up checkout</small>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Account Security Section -->
+              <div class="profile-section">
+                <div class="section-header">
+                  <div class="section-icon">
+                    <i class="fa-solid fa-shield-alt"></i>
+                  </div>
+                  <h4>Account Security</h4>
+                </div>
+
+                <div class="security-actions">
+                  <%= link_to edit_user_registration_path, class: "security-btn" do %>
+                    <div class="security-item">
+                      <div class="security-icon">
+                        <i class="fa-solid fa-key"></i>
+                      </div>
+                      <div class="security-info">
+                        <h6>Change Password</h6>
+                        <small>Update your password to keep your account secure</small>
+                      </div>
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-6">
-              <h5>Account Information</h5>
-              <p><strong>Email:</strong> <%= current_user.email %></p>
-              <% if current_user.first_name.present? %>
-                <p><strong>First Name:</strong> <%= current_user.first_name %></p>
-              <% end %>
-              <% if current_user.last_name.present? %>
-                <p><strong>Last Name:</strong> <%= current_user.last_name %></p>
-              <% end %>
-              <% if current_user.phone.present? %>
-                <p><strong>Phone:</strong> <%= current_user.phone %></p>
-              <% end %>
+          <!-- Quick Actions Sidebar -->
+          <div class="col-lg-4">
+            <div class="quick-actions-card sticky-top">
+              <h4>Quick Actions</h4>
+
+              <div class="action-buttons">
+                <%= link_to edit_profile_path, class: "action-btn primary" do %>
+                  <i class="fa-solid fa-edit"></i>
+                  <span>Edit Profile</span>
+                <% end %>
+
+                <%= link_to orders_path, class: "action-btn secondary" do %>
+                  <i class="fa-solid fa-receipt"></i>
+                  <span>Order History</span>
+                <% end %>
+
+                <%= link_to cart_path, class: "action-btn secondary" do %>
+                  <i class="fa-solid fa-shopping-cart"></i>
+                  <span>View Cart</span>
+                <% end %>
+
+                <%= link_to edit_user_registration_path, class: "action-btn secondary" do %>
+                  <i class="fa-solid fa-key"></i>
+                  <span>Change Password</span>
+                <% end %>
+              </div>
+
+              <div class="account-stats">
+                <div class="stat">
+                  <div class="stat-icon">
+                    <i class="fa-solid fa-calendar"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-label">Member Since</span>
+                    <span class="stat-value"><%= current_user.created_at.strftime("%B %Y") %></span>
+                  </div>
+                </div>
+
+                <div class="stat">
+                  <div class="stat-icon">
+                    <i class="fa-solid fa-shopping-bag"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-label">Total Orders</span>
+                    <span class="stat-value"><%= current_user.orders.count %></span>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <div class="col-md-6">
-              <h5>Address</h5>
-              <% if current_user.address_line_1.present? %>
-                <p>
-                  <%= current_user.address_line_1 %><br>
-                  <%= current_user.address_line_2 if current_user.address_line_2.present? %><br>
-                  <%= current_user.city %>, <%= current_user.state %> <%= current_user.postal_code %><br>
-                  <%= current_user.country %>
-                </p>
-              <% else %>
-                <p class="text-muted">No address on file</p>
-              <% end %>
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="text-center">
-            <%= link_to "Change Password", edit_user_registration_path, class: "btn btn-outline-secondary" %>
           </div>
         </div>
       </div>
