@@ -1,4 +1,20 @@
 Rails.application.routes.draw do
+  # Add this admin namespace
+  namespace :admin do
+    root 'dashboard#index'
+
+    resources :orders, only: [:index, :show, :edit, :update] do
+      member do
+        patch :cancel
+      end
+      collection do
+        patch :bulk_cancel
+      end
+    end
+    resources :products
+    resources :users
+  end
+
   devise_for :users
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -21,4 +37,5 @@ Rails.application.routes.draw do
   resources :order_items, only: [:index, :show, :edit, :update, :destroy]
   resources :orders, only: %i[index show edit update destroy]
   resources :user_designs, only: %i[index show edit update destroy]
+  resource :profile, only: [:show, :edit, :update]
 end

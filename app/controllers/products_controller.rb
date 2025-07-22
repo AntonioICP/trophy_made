@@ -21,6 +21,8 @@ class ProductsController < ApplicationController
       @products = @products.joins(:sports).distinct
     elsif params[:category_type] == "corporate"
       @products = @products.joins(:corporate_categories).distinct
+    elsif params[:category_type] == "medal"
+      @products = @products.joins(:product_styles).where(product_styles: { name: "Medals" }).distinct
     end
 
     # Product style filtering (for Medals, Cups, Plaques)
@@ -28,13 +30,24 @@ class ProductsController < ApplicationController
       @products = @products.joins(:product_styles).where(product_styles: { name: params[:product_style] })
     end
 
-    # Existing filters
+    # Sports Filtering
     if params[:sport_ids].present?
       @products = @products.joins(:sports).where(sports: { id: params[:sport_ids] })
     end
 
+    # Materials Filtering
     if params[:material_ids].present?
       @products = @products.joins(:materials).where(materials: { id: params[:material_ids] })
+    end
+
+    # Corporate Categories Filtering
+    if params[:corporate_category_ids].present?
+      @products = @products.joins(:corporate_categories).where(corporate_categories: { id: params[:corporate_category_ids] })
+    end
+
+    # Quality Filtering
+    if params[:quality_ids].present?
+      @products = @products.where(quality_id: params[:quality_ids])
     end
 
     if params[:min_price].present?
@@ -66,6 +79,7 @@ class ProductsController < ApplicationController
     @materials = available_materials
     @product_styles = available_product_styles
     @corporate_categories = available_corporate_categories
+    @qualities = available_qualities
   end
 
   def available_sports
@@ -139,6 +153,11 @@ class ProductsController < ApplicationController
                              .where(materials: { id: params[:material_ids] })
     end
 
+    if params[:quality_ids].present?
+      base_query = base_query.joins(:products)
+                             .where(products: { quality_id: params[:quality_ids] })
+    end
+
     apply_price_filter_to_query(base_query).distinct.order(:name)
   end
 
@@ -166,5 +185,37 @@ class ProductsController < ApplicationController
     query = query.where('products.price >= ?', params[:min_price]) if params[:min_price].present?
     query = query.where('products.price <= ?', params[:max_price]) if params[:max_price].present?
     query
+  end
+
+  def available_qualities
+    base_query = Quality.joins(:products).where(products: { parent_id: 0 })
+
+    # Filter by category type
+    if params[:category_type] == "sports"
+      base_query = base_query.joins(products: :sports)
+    elsif params[:category_type] == "corporate"
+      base_query = base_query.joins(products: :corporate_categories)
+    end
+
+    # Filter by product style
+    if params[:product_style].present?
+      base_query = base_query.joins(products: :product_styles)
+                             .where(product_styles: { name: params[:product_style] })
+    end
+
+    # Filter by sports if selected
+    if params[:sport_ids].present?
+      base_query = base_query.joins(products: :sports)
+                             .where(sports: { id: params[:sport_ids] })
+    end
+
+    # Filter by materials if selected
+    if params[:material_ids].present?
+      base_query = base_query.joins(products: :materials)
+                             .where(materials: { id: params[:material_ids] })
+    end
+
+    # Filter by price range
+    apply_price_filter_to_query(base_query).distinct.order(:name)
   end
 end

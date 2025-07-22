@@ -31,4 +31,48 @@ module ApplicationHelper
       products_path(category_type: "corporate")
     end
   end
+
+  def medal_sport_path_by_name(sport_name)
+    sport = Sport.find_by(name: sport_name)
+    if sport
+      products_path(product_style: "Medals", sport_ids: [sport.id])
+    else
+      products_path(product_style: "Medals")
+    end
+  end
+
+  def cup_quality_path_by_name(quality_name)
+    quality = Quality.find_by(name: quality_name)
+    if quality
+      products_path(product_style: @cup_names, quality_ids: [quality.id])
+    else
+      products_path(product_style: @cup_names)
+    end
+  end
+
+  def plaque_quality_path_by_name(category_name)
+    category = CorporateCategory.find_by(name: category_name)
+    if category
+      products_path(product_style: "Plaques", corporate_category_ids: [category.id])
+    else
+      products_path(product_style: "Plaques")
+    end
+  end
+
+  def order_status_color(status)
+    case status.to_s.downcase
+    when 'pending'
+      'warning'
+    when 'processing'
+      'info'
+    when 'shipped'
+      'primary'
+    when 'delivered'
+      'success'
+    when 'cancelled'
+      'danger'
+    else
+      'secondary'
+    end
+  end
 end
