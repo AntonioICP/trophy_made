@@ -158,7 +158,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" style="right: 0; left: auto; min-width: 160px;">
               <%= link_to "Profile", profile_path, class: "dropdown-item" %>
-              <%= link_to "Orders", "#", class: "dropdown-item" %>
+              <%= link_to "Orders", orders_path, class: "dropdown-item" %>
               <% if current_user.admin? %>
                 <%= link_to "Admin Panel", admin_root_path, class: "dropdown-item" %>
               <% end %>

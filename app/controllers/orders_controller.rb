@@ -1,11 +1,13 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: %i[edit update show destroy]
+  before_action :authenticate_user!
 
   def index
-    @orders = current_user.orders if current_user
+    @orders = current_user.orders.where.not(status: 'pending').order(created_at: :desc)
   end
 
   def show
+    @order = current_user.orders.find(params[:id])
   end
 
   def new

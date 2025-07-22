@@ -1,5 +1,204 @@
-<% @orders.each do |order| %>
-  <%= order  %>
-<% end %>
+<div class="orders-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <div class="row g-4">
+          <!-- Main Orders List -->
+          <div class="col-lg-8">
+            <div class="orders-card">
+              <!-- Header -->
+              <div class="orders-header">
+                <div class="header-content">
+                  <div class="header-icon">
+                    <i class="fa-solid fa-receipt"></i>
+                  </div>
+                  <div class="header-info">
+                    <h2>Order History</h2>
+                    <p class="text-muted">View and track all your past orders</p>
+                  </div>
+                </div>
+                <div class="orders-count">
+                  <span><%= pluralize(@orders.count, 'order') %></span>
+                </div>
+              </div>
 
-<%= render "checkout", product: @product, order: @order %>
+              <!-- Orders List -->
+              <div class="orders-list">
+                <% if @orders.any? %>
+                  <% @orders.each do |order| %>
+                    <div class="order-item">
+                      <div class="order-main">
+                        <div class="order-info">
+                          <div class="order-number">
+                            <strong>Order #<%= order.id %></strong>
+                            <span class="order-date">
+                              <i class="fa-solid fa-calendar me-1"></i>
+                              <%= order.created_at.strftime("%B %d, %Y") %>
+                            </span>
+                          </div>
+
+                          <div class="order-details">
+                            <div class="order-items-preview">
+                              <% order.order_items.limit(3).each do |item| %>
+                                <div class="item-preview">
+                                  <i class="fa-solid fa-trophy"></i>
+                                  <span><%= item.product.name %></span>
+                                  <span class="qty">x<%= item.quantity %></span>
+                                </div>
+                              <% end %>
+                              <% if order.order_items.count > 3 %>
+                                <div class="more-items">
+                                  +<%= order.order_items.count - 3 %> more items
+                                </div>
+                              <% end %>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="order-status">
+                          <div class="status-badge <%= order.status&.downcase || 'pending' %>">
+                            <i class="fa-solid fa-<%= status_icon(order.status) %>"></i>
+                            <%= order.status&.capitalize || 'Pending' %>
+                          </div>
+                        </div>
+
+                        <div class="order-total">
+                          <span class="total-label">Total</span>
+                          <span class="total-amount">
+                            $<%= order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %>
+                          </span>
+                        </div>
+
+                        <div class="order-actions">
+                          <%= link_to order_path(order), class: "view-btn" do %>
+                            <i class="fa-solid fa-eye"></i>
+                            View Details
+                          <% end %>
+
+                          <% if order.status == 'completed' %>
+                            <%= link_to "#", class: "reorder-btn" do %>
+                              <i class="fa-solid fa-refresh"></i>
+                              Reorder
+                            <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                <% else %>
+                  <!-- Empty State -->
+                  <div class="empty-orders">
+                    <div class="empty-icon">
+                      <i class="fa-solid fa-receipt"></i>
+                    </div>
+
+                    <h3>No Orders Yet</h3>
+
+                    <p class="lead">
+                      You haven't placed any orders yet.<br>
+                      Start shopping to see your order history here!
+                    </p>
+
+                    <div class="category-suggestions">
+                      <%= link_to products_path(category_type: "sports"), class: "category-card" do %>
+                        <div class="category-icon">
+                          <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <span>Sports Trophies</span>
+                      <% end %>
+
+                      <%= link_to products_path(product_style: "Medals"), class: "category-card" do %>
+                        <div class="category-icon">
+                          <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <span>Medals</span>
+                      <% end %>
+
+                      <%= link_to products_path(category_type: "corporate"), class: "category-card" do %>
+                        <div class="category-icon">
+                          <i class="fa-solid fa-award"></i>
+                        </div>
+                        <span>Corporate Awards</span>
+                      <% end %>
+                    </div>
+
+                    <%= link_to products_path, class: "start-shopping-btn" do %>
+                      <i class="fa-solid fa-shopping-cart me-2"></i>
+                      Start Shopping
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary Sidebar -->
+          <div class="col-lg-4">
+            <div class="order-summary-sidebar sticky-top">
+              <h4>Order Summary</h4>
+
+              <div class="summary-stats">
+                <div class="stat-item">
+                  <div class="stat-icon">
+                    <i class="fa-solid fa-shopping-bag"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number"><%= @orders.count %></span>
+                    <span class="stat-label">Total Orders</span>
+                  </div>
+                </div>
+
+                <div class="stat-item">
+                  <div class="stat-icon">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number">
+                      $<%= @orders.sum { |order| order.order_items.sum { |item| item.quantity * (item.product.price || 0) } }.round(2) %>
+                    </span>
+                    <span class="stat-label">Total Spent</span>
+                  </div>
+                </div>
+
+                <div class="stat-item">
+                  <div class="stat-icon">
+                    <i class="fa-solid fa-trophy"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number">
+                      <%= @orders.sum { |order| order.order_items.sum(:quantity) } %>
+                    </span>
+                    <span class="stat-label">Items Purchased</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick-actions">
+                <%= link_to profile_path, class: "action-btn secondary" do %>
+                  <i class="fa-solid fa-user"></i>
+                  <span>Back to Profile</span>
+                <% end %>
+
+                <%= link_to products_path, class: "action-btn primary" do %>
+                  <i class="fa-solid fa-shopping-cart"></i>
+                  <span>Continue Shopping</span>
+                <% end %>
+              </div>
+
+              <div class="help-section">
+                <h6>Need Help?</h6>
+                <p class="small text-muted mb-3">
+                  Questions about your orders? Our support team is here to help.
+                </p>
+                <a href="mailto:support@trophymade.com" class="support-link">
+                  <i class="fa-solid fa-envelope me-2"></i>
+                  Contact Support
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
