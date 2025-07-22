@@ -5,6 +5,14 @@
         <div class="card-body p-4">
           <h2 class="text-center mb-4">Log in</h2>
 
+          <!-- Show message if coming from checkout -->
+          <% if params[:checkout] == 'true' || session[:user_return_to]&.include?('checkout') %>
+            <div class="alert alert-info mb-4">
+              <i class="fa-solid fa-shopping-cart me-2"></i>
+              <strong>Almost there!</strong> Please sign in to complete your checkout.
+            </div>
+          <% end %>
+
           <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
             <div class="mb-3">
               <%= f.label :email, class: "form-label" %>
@@ -31,6 +39,15 @@
           <div class="text-center">
             <%= render "devise/shared/links" %>
           </div>
+
+          <!-- Show checkout-specific links if coming from checkout -->
+          <% if params[:checkout] == 'true' || session[:user_return_to]&.include?('checkout') %>
+            <hr>
+            <div class="text-center">
+              <p class="text-muted small">Don't have an account?</p>
+              <%= link_to "Create Account", new_registration_path(resource_name, checkout: 'true'), class: "btn btn-outline-primary btn-sm" %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

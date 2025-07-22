@@ -1,109 +1,211 @@
-<div class="container py-5">
-  <% if current_order&.order_items&.any? %>
-    <h2 class="mb-4">Your Cart</h2>
+<div class="cart-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <% if current_order&.order_items&.any? %>
+          <!-- Progress Steps -->
+          <div class="progress-steps mb-5">
+            <div class="step active">
+              <div class="step-icon">
+                <i class="fa-solid fa-shopping-cart"></i>
+              </div>
+              <span>Cart</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-icon">
+                <i class="fa-solid fa-credit-card"></i>
+              </div>
+              <span>Checkout</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-icon">
+                <i class="fa-solid fa-check-circle"></i>
+              </div>
+              <span>Complete</span>
+            </div>
+          </div>
 
-    <table class="table align-middle">
-      <thead class="table-light">
-        <tr>
-          <th scope="col">Product</th>
-          <th scope="col" class="text-center">Qty</th>
-          <th scope="col" class="text-end">Price</th>
-          <th scope="col" class="text-end">Subtotal</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @order.order_items.each do |item| %>
-          <tr>
-            <td><%= item.product.name %></td>
-            <td class="text-center"><%= item.quantity %></td>
-            <td class="text-end">$<%= item.product.price || 0.00 %></td>
-            <td class="text-end">$<%= ((item.product.price || 0) * item.quantity).round(2) %></td>
-            <td class="text-end">
-              <%= button_to "Remove", order_item_path(item), method: :delete, data: { turbo_confirm: "Remove this item?" }, class: "btn btn-outline-danger btn-sm" %>
-            </td>
-          </tr>
+          <div class="row g-4">
+            <!-- Cart Items -->
+            <div class="col-lg-8">
+              <div class="cart-card">
+                <!-- Header -->
+                <div class="cart-header">
+                  <h2>Your Cart</h2>
+                  <div class="items-count">
+                    <span><%= @order.order_items.sum(:quantity) %> items</span>
+                  </div>
+                </div>
+
+                <!-- Cart Items -->
+                <div class="cart-items">
+                  <% @order.order_items.each do |item| %>
+                    <div class="cart-item">
+                      <div class="item-image">
+                        <i class="fa-solid fa-trophy"></i>
+                      </div>
+
+                      <div class="item-details">
+                        <h5><%= item.product.name %></h5>
+                        <p class="item-description text-muted">Premium quality trophy</p>
+                        <div class="item-meta">
+                          <span class="price">$<%= item.product.price || 0.00 %></span>
+                        </div>
+                      </div>
+
+                      <div class="item-controls">
+                        <div class="quantity-control">
+                          <label class="form-label">Quantity</label>
+                          <div class="quantity-input">
+                            <span class="qty-display"><%= item.quantity %></span>
+                          </div>
+                        </div>
+
+                        <div class="item-total">
+                          <span class="total-label">Total</span>
+                          <span class="total-price">$<%= ((item.product.price || 0) * item.quantity).round(2) %></span>
+                        </div>
+
+                        <%= button_to order_item_path(item), method: :delete,
+                            data: { turbo_confirm: "Remove this item?" },
+                            class: "remove-btn" do %>
+                          <i class="fa-solid fa-trash"></i>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+
+                <!-- Continue Shopping -->
+                <div class="continue-shopping">
+                  <%= link_to products_path, class: "continue-btn" do %>
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Continue Shopping
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="col-lg-4">
+              <div class="order-summary-card sticky-top">
+                <h4>Order Summary</h4>
+
+                <div class="summary-details">
+                  <div class="summary-row">
+                    <span>Items (<%= @order.order_items.sum(:quantity) %>)</span>
+                    <span>$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Shipping</span>
+                    <span class="free">Free</span>
+                  </div>
+                  <div class="summary-row total">
+                    <span>Total</span>
+                    <span>$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                  </div>
+                </div>
+
+                <div class="checkout-actions">
+                  <%= link_to checkout_path, class: "checkout-btn" do %>
+                    <i class="fa-solid fa-lock me-2"></i>
+                    Proceed to Checkout
+                    <span class="btn-total">$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                  <% end %>
+                </div>
+
+                <div class="trust-badges">
+                  <div class="badge">
+                    <i class="fa-solid fa-truck"></i>
+                    <span>Free Shipping</span>
+                  </div>
+                  <div class="badge">
+                    <i class="fa-solid fa-undo"></i>
+                    <span>30-Day Returns</span>
+                  </div>
+                  <div class="badge">
+                    <i class="fa-solid fa-shield-alt"></i>
+                    <span>Secure Payment</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <% else %>
+          <!-- Empty Cart -->
+          <div class="empty-cart">
+            <div class="empty-cart-content">
+              <div class="empty-icon">
+                <i class="fa-solid fa-shopping-cart"></i>
+              </div>
+
+              <h2>Your Cart is Empty</h2>
+
+              <p class="lead">
+                Looks like you haven't added anything to your cart yet.<br>
+                Start browsing our amazing collection of trophies, medals, and awards!
+              </p>
+
+              <div class="category-grid">
+                <%= link_to products_path(category_type: "sports"), class: "category-card" do %>
+                  <div class="category-icon">
+                    <i class="fa-solid fa-trophy"></i>
+                  </div>
+                  <span>Sports Trophies</span>
+                <% end %>
+
+                <%= link_to products_path(product_style: "Medals"), class: "category-card" do %>
+                  <div class="category-icon">
+                    <i class="fa-solid fa-medal"></i>
+                  </div>
+                  <span>Medals</span>
+                <% end %>
+
+                <%= link_to products_path(category_type: "corporate"), class: "category-card" do %>
+                  <div class="category-icon">
+                    <i class="fa-solid fa-award"></i>
+                  </div>
+                  <span>Corporate Awards</span>
+                <% end %>
+
+                <%= link_to products_path(product_style: "Plaques"), class: "category-card" do %>
+                  <div class="category-icon">
+                    <i class="fa-solid fa-certificate"></i>
+                  </div>
+                  <span>Plaques</span>
+                <% end %>
+              </div>
+
+              <div class="features-grid">
+                <div class="feature">
+                  <i class="fa-solid fa-shipping-fast"></i>
+                  <h6>Fast Dispatch</h6>
+                  <small>Order today, dispatched within 7 days</small>
+                </div>
+                <div class="feature">
+                  <i class="fa-solid fa-star"></i>
+                  <h6>Premium Quality</h6>
+                  <small>High-quality awards and trophies</small>
+                </div>
+                <div class="feature">
+                  <i class="fa-solid fa-paint-brush"></i>
+                  <h6>Custom Engraving</h6>
+                  <small>Personalized just for you</small>
+                </div>
+              </div>
+
+              <div class="contact-info">
+                <i class="fa-solid fa-phone me-2"></i>
+                Need help finding the perfect award?
+                <a href="mailto:info@trophymade.com">Contact us</a>
+              </div>
+            </div>
+          </div>
         <% end %>
-      </tbody>
-    </table>
-
-    <div class="d-flex flex-column align-items-end mt-4">
-      <h4>Total: $<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></h4>
-      <%= link_to "Checkout", "#", class: "btn btn-primary mt-2" %>
+      </div>
     </div>
-  <% else %>
-    <div class="text-center py-5">
-      <div class="mb-4">
-        <i class="fa-solid fa-cart-shopping text-muted" style="font-size: 4rem;"></i>
-      </div>
-
-      <h2 class="mb-3">Your Cart is Empty</h2>
-
-      <p class="text-muted mb-4 lead">
-        Looks like you haven't added anything to your cart yet.<br>
-        Start browsing our amazing collection of trophies, medals, and awards!
-      </p>
-
-      <div class="row justify-content-center mb-5">
-        <div class="col-md-8">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <%= link_to products_path(category_type: "sports"), class: "btn btn-lg w-100", style: "background-color: #0D2149; color: white; border-color: #0D2149;" do %>
-                <i class="fa-solid fa-trophy me-2"></i>
-                Sports Trophies
-              <% end %>
-            </div>
-            <div class="col-md-6">
-              <%= link_to products_path(product_style: "Medals"), class: "btn btn-lg w-100", style: "background-color: #0D2149; color: white; border-color: #0D2149;" do %>
-                <i class="fa-solid fa-medal me-2"></i>
-                Medals
-              <% end %>
-            </div>
-            <div class="col-md-6">
-              <%= link_to products_path(category_type: "corporate"), class: "btn btn-lg w-100", style: "background-color: #0D2149; color: white; border-color: #0D2149;" do %>
-                <i class="fa-solid fa-award me-2"></i>
-                Corporate Awards
-              <% end %>
-            </div>
-            <div class="col-md-6">
-              <%= link_to products_path(product_style: "Plaques"), class: "btn btn-lg w-100", style: "background-color: #0D2149; color: white; border-color: #0D2149;" do %>
-                <i class="fa-solid fa-certificate me-2"></i>
-                Plaques
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-light rounded p-4 mb-4">
-        <h5 class="mb-3" style="color: #0D2149;">
-          <i class="fa-solid fa-info-circle me-2" style="color: #0D2149;"></i>
-          Why Choose TrophyMade?
-        </h5>
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <i class="fa-solid fa-shipping-fast mb-2" style="font-size: 1.5rem; color: #0D2149;"></i>
-            <h6>Fast Dispatch</h6>
-            <small class="text-muted">Order today, dispatched within 7 days</small>
-          </div>
-          <div class="col-md-4 mb-3">
-            <i class="fa-solid fa-star mb-2" style="font-size: 1.5rem; color: #0D2149;"></i>
-            <h6>Premium Quality</h6>
-            <small class="text-muted">High-quality awards and trophies</small>
-          </div>
-          <div class="col-md-4 mb-3">
-            <i class="fa-solid fa-paint-brush mb-2" style="font-size: 1.5rem; color: #0D2149;"></i>
-            <h6>Custom Engraving</h6>
-            <small class="text-muted">Personalized just for you</small>
-          </div>
-        </div>
-      </div>
-
-      <p class="text-muted">
-        <i class="fa-solid fa-phone me-1"></i>
-        Need help finding the perfect award?
-        <a href="mailto:info@trophymade.com" class="text-decoration-none" style="color: #0D2149;">Contact us</a>
-      </p>
-    </div>
-  <% end %>
+  </div>
 </div>

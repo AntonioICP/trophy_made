@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   get 'cart', to: 'cart#show', as: :cart
+  get 'checkout', to: 'orders#checkout', as: :checkout
 
   resources :products, only: %i[index show] do
     resources :orders, only: %i[new create]
