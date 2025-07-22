@@ -75,4 +75,19 @@ module ApplicationHelper
       'secondary'
     end
   end
+
+  def status_icon(status)
+    case status&.downcase
+    when 'completed'
+      'check-circle'
+    when 'processing'
+      'cog'
+    when 'shipped'
+      'truck'
+    when 'cancelled'
+      'times-circle'
+    else
+      'clock'
+    end
+  end
 end

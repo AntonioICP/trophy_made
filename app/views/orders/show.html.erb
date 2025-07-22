@@ -1,1 +1,132 @@
-<%= @order %>
+<div class="orders-container">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <div class="row g-4">
+          <!-- Order Details -->
+          <div class="col-lg-8">
+            <div class="orders-card">
+              <!-- Header -->
+              <div class="order-detail-header">
+                <div class="back-button">
+                  <%= link_to orders_path, class: "back-link" do %>
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Back to Orders
+                  <% end %>
+                </div>
+
+                <div class="order-title">
+                  <h2>Order #<%= @order.id %></h2>
+                  <div class="order-meta">
+                    <span class="order-date">
+                      <i class="fa-solid fa-calendar me-1"></i>
+                      Placed on <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                    </span>
+                    <div class="status-badge <%= @order.status&.downcase || 'pending' %>">
+                      <i class="fa-solid fa-<%= status_icon(@order.status) %>"></i>
+                      <%= @order.status&.capitalize || 'Pending' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Order Items -->
+              <div class="order-items-section">
+                <h4>
+                  <i class="fa-solid fa-box me-2"></i>
+                  Order Items
+                </h4>
+
+                <div class="order-items-list">
+                  <% @order.order_items.each do |item| %>
+                    <div class="order-item-detail">
+                      <div class="item-image">
+                        <i class="fa-solid fa-trophy"></i>
+                      </div>
+
+                      <div class="item-info">
+                        <h5><%= item.product.name %></h5>
+                        <p class="item-description">Premium quality trophy</p>
+                        <div class="item-specs">
+                          <span class="spec">SKU: <%= item.product.id %></span>
+                          <span class="spec">Quantity: <%= item.quantity %></span>
+                        </div>
+                      </div>
+
+                      <div class="item-pricing">
+                        <div class="unit-price">$<%= item.product.price || 0 %> each</div>
+                        <div class="total-price">$<%= ((item.product.price || 0) * item.quantity).round(2) %></div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="col-lg-4">
+            <div class="order-summary-sidebar sticky-top">
+              <h4>Order Summary</h4>
+
+              <div class="summary-breakdown">
+                <div class="summary-row">
+                  <span>Items (<%= @order.order_items.sum(:quantity) %>)</span>
+                  <span>$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                </div>
+                <div class="summary-row">
+                  <span>Shipping</span>
+                  <span class="free">Free</span>
+                </div>
+                <div class="summary-row total">
+                  <span>Total</span>
+                  <span>$<%= @order.order_items.sum { |item| item.quantity * (item.product.price || 0) }.round(2) %></span>
+                </div>
+              </div>
+
+              <!-- Shipping Information -->
+              <div class="shipping-info">
+                <h6>
+                  <i class="fa-solid fa-truck me-2"></i>
+                  Shipping Information
+                </h6>
+                <div class="address-info">
+                  <% if current_user.address_line_1.present? %>
+                    <div class="address-line"><%= current_user.first_name %> <%= current_user.last_name %></div>
+                    <div class="address-line"><%= current_user.address_line_1 %></div>
+                    <% if current_user.address_line_2.present? %>
+                      <div class="address-line"><%= current_user.address_line_2 %></div>
+                    <% end %>
+                    <div class="address-line"><%= current_user.city %>, <%= current_user.state %> <%= current_user.postal_code %></div>
+                    <div class="address-line"><%= current_user.country %></div>
+                  <% else %>
+                    <div class="text-muted">No shipping address on file</div>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="order-actions">
+                <% if @order.status == 'completed' %>
+                  <%= link_to "#", class: "action-btn primary" do %>
+                    <i class="fa-solid fa-refresh me-2"></i>
+                    Reorder Items
+                  <% end %>
+                <% end %>
+
+                <%= link_to "#", class: "action-btn secondary" do %>
+                  <i class="fa-solid fa-download me-2"></i>
+                  Download Invoice
+                <% end %>
+
+                <a href="mailto:support@trophymade.com" class="support-link">
+                  <i class="fa-solid fa-headset me-2"></i>
+                  Need Help with this Order?
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
