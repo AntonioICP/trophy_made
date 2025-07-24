@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-6 text-left position-relative" style="min-height: 500px;">
       <h1 class="mb-5"><%= @product.name %></h1>
-      <p class="description mt-5"><%= @product.description %></p>
+      <p class="description mt-5"><%= raw @product.description %></p>
       <h2 class="card-trip-pricing mt-5">Price: $<%= @product.price %></h2>
 
       <!-- Quantity and Add to Cart positioned at bottom -->
