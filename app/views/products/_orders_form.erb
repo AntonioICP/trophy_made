@@ -1,6 +1,12 @@
 <%= simple_form_for [product, OrderItem.new], method: :post, html: { class: "d-inline" } do |f| %>
   <%= f.input :product_id, as: :hidden, input_html: { value: product.id } %>
-  <%= f.input :quantity, as: :hidden, input_html: { value: 1 } %>
+  <%= f.input :quantity, label: "Quantity", input_html: {
+    value: 1,
+    min: 1,
+    type: :number,
+    class: "form-control",
+    style: "max-width: 100px;"
+   } %>
 
-  <%= f.button :submit, "Add to Cart", class: "btn btn-mustard", style: "font-size: 18px; padding: 12px 24px; font-weight: bold;" %>
+  <%= f.button :submit, "Add to Cart", class: "btn btn-outline-primary w-100 mt-5 mb-5", style: "font-size: 18px; padding: 12px 24px; font-weight: bold;" %>
 <% end %>
