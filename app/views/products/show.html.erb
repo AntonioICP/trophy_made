@@ -1,29 +1,49 @@
 <div class="container">
-  <div class="row align-items-center">
+  <div class="row align-items-center" style="padding: 60px 0;">
     <div class="col-md-6">
       <img src="<%= @product.image_url %>" alt="<%= @product.name %>" class="w-100" style="height: 500px; object-fit: contain;" />
     </div>
-    <div class="col-md-6 text-left">
+    <div class="col-md-6 text-left position-relative" style="min-height: 500px;">
       <h1 class="mb-5"><%= @product.name %></h1>
       <p class="description mt-5"><%= @product.description %></p>
       <h2 class="card-trip-pricing mt-5">Price: $<%= @product.price %></h2>
+
+      <!-- Quantity and Add to Cart positioned at bottom -->
+      <div class="position-absolute bottom-0 start-0 w-100 d-flex justify-content-between align-items-end" style="padding-bottom: 20px;">
+        <!-- Quantity on bottom left -->
+        <div class="quantity-section">
+          <%= simple_form_for [@product, OrderItem.new], method: :post, html: { class: "d-inline" } do |f| %>
+            <%= f.input :product_id, as: :hidden, input_html: { value: @product.id } %>
+            <%= f.input :quantity,
+                label: "Quantity",
+                required: false,
+                input_html: {
+                  value: 1,
+                  min: 1,
+                  type: :number,
+                  class: "form-control",
+                  style: "max-width: 100px;"
+                } %>
+        </div>
+
+        <!-- Add to Cart on bottom right -->
+        <div class="cart-section">
+            <%= f.button :submit, "Add to Cart", class: "btn btn-outline-primary", style: "font-size: 18px; padding: 12px 24px; font-weight: bold;" %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 
-<!-- ADD TO CART BUTTON -->
-<div class="d-flex justify-content-center align-items-center">
-  <%= render "orders_form", product: @product, order: @order %>
-</div>
-
 <!--DESIGN -->
-<div class="card-trip-pricing d-flex justify-content-center align-items-center">
+<div class="card-trip-pricing d-flex justify-content-center align-items-center" style="margin-top: 80px; margin-bottom: 40px;">
   <h1>Design your award with TrophyMaker</h1>
 </div>
 
 <div class="d-flex justify-content-center align-items-center" style="margin: 30px;">
-  <div class="col-sw-2 col-6">
+  <div class="col-4">  <!-- Changed from col-6 to col-4 (1/3) -->
     <div class="row">
       <div class="column">Text</div>
         <div class="column"><input type="text" id="text" value="Type here"></div>
@@ -66,7 +86,7 @@
     </div>
   </div>
 
-  <div class="col-sw-12 col-6">
+  <div class="col-8">  <!-- Changed from col-6 to col-8 (2/3) -->
   <p>Click and drag to move your elements around the trophy.
     Engraving area is within the red border</p>
     <div class="row">
