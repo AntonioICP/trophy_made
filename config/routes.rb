@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # Add this admin namespace
   namespace :admin do
     root 'dashboard#index'
+    post 'dashboard/upload_csv', to: 'dashboard#upload_csv', as: :dashboard_upload_csv
 
     resources :orders, only: [:index, :show, :edit, :update] do
       member do
