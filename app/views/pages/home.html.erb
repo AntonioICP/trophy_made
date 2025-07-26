@@ -14,8 +14,10 @@
           <h1 class="tight-lines mb-0">
             <span>Trophies made for you.</span><br>
             <span><i>
-              <%= link_to product_path(13492, anchor: "trophymaker"), style: "color: #F3A712; text-decoration: none; font-weight:400;" do %>
-                Designed by you.  <i class="fas fa-arrow-up-right-from-square" style="font-size: 0.4em; vertical-align: middle; color: #F3A712"></i>
+              <% if Product.first %>
+                <%= link_to product_path(Product.first, anchor: "trophymaker"), style: "color: #F3A712; text-decoration: none; font-weight:400;" do %>
+                  Designed by you.  <i class="fas fa-arrow-up-right-from-square" style="font-size: 0.4em; vertical-align: middle; color: #F3A712"></i>
+                <% end %>
               <% end %>
               </i></span><br>
             <span>Delivered with care.</span>
