@@ -30,7 +30,7 @@ class Admin::ProductsController < ApplicationController
   def create_product_from_row(row)
     product = Product.create!(
       database_id: row["database_id"],
-      SKU: row["SKU"],
+      SKU: row["sku"],
       name: row["name"],
       description: row["description"],
       parent_id: row["parent_id"],
