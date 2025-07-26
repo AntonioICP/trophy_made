@@ -10,11 +10,18 @@
       <!-- Right div -->
       <div class="col-md-7 text-left">
         <div class="hero-inner">
-          <h1 class="h1-small">Online Trophies Australia</h1>
-          <h1>Trophies designed by you.<br>
-          Made for you.<br>
-          Delivered with care.</h1>
-            <%= link_to "Start Customising", products_path, class: "btn btn-primary mt-4" %>
+          <%# <h1 class="h1-small">Online Trophies Australia</h1> %>
+          <h1 class="tight-lines mb-0">
+            <span>Trophies made for you.</span><br>
+            <span><i>
+              <%= link_to product_path(13492, anchor: "trophymaker"), style: "color: #F3A712; text-decoration: none; font-weight:400;" do %>
+                Designed by you.  <i class="fas fa-arrow-up-right-from-square" style="font-size: 0.4em; vertical-align: middle; color: #F3A712"></i>
+              <% end %>
+              </i></span><br>
+            <span>Delivered with care.</span>
+          </h1>
+            <br>
+            <%= link_to "Start customising", products_path, class: "btn btn-primary mt-4", style: "font-size: 1.1rem; letter-spacing: 0.1em;" %>
         </div>
       </div>
     </div>
@@ -47,7 +54,7 @@
 <!-- SHOP BY CATEGORY -->
 <section class="py-5">
   <div class="container text-center category-section">
-    <h3 class="mb-5">SHOP BY CATEGORY:</h3>
+    <h3 class="mb-5"><strong>SHOP BY CATEGORY</strong></h3>
     <div class="row g-4 justify-content-center">
       <div class="col-6 col-md-4 col-lg-2">
         <div class="category-card">
