@@ -12,23 +12,23 @@
       <div class="position-absolute bottom-0 start-0 w-100 d-flex justify-content-between align-items-end" style="padding-bottom: 20px;">
         <!-- Quantity on bottom left -->
         <div class="quantity-section">
-          <%= simple_form_for [@product, OrderItem.new], method: :post, html: { class: "d-inline" } do |f| %>
-            <%= f.input :product_id, as: :hidden, input_html: { value: @product.id } %>
-            <%= f.input :quantity,
-                label: "Quantity",
-                required: false,
-                input_html: {
-                  value: 1,
-                  min: 1,
-                  type: :number,
-                  class: "form-control",
-                  style: "max-width: 100px;"
-                } %>
-        </div>
-
-        <!-- Add to Cart on bottom right -->
-        <div class="cart-section">
-            <%= f.button :submit, "Add to Cart", class: "btn btn-outline-primary", style: "font-size: 18px; padding: 12px 24px; font-weight: bold;" %>
+          <%= simple_form_for [@product, OrderItem.new], method: :post, html: { class: "d-flex justify-content-between align-items-end", data: { turbo: false } } do |f| %>
+            <div class="quantity-section">
+              <%= f.input :product_id, as: :hidden, input_html: { value: @product.id } %>
+              <%= f.input :quantity,
+                  label: "Quantity",
+                  required: false,
+                  input_html: {
+                    value: 1,
+                    min: 1,
+                    type: :number,
+                    class: "form-control",
+                    style: "max-width: 100px;"
+                  } %>
+            </div>
+            <div class="cart-section">
+              <%= f.button :submit, "Add to Cart", class: "btn btn-outline-primary", style: "font-size: 18px; padding: 12px 24px; font-weight: bold;" %>
+            </div>
           <% end %>
         </div>
       </div>
