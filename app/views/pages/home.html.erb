@@ -3,9 +3,8 @@
   <div class="container">
     <div class="row align-items-center h-100">
       <!-- Left div -->
-      <div class="col-md-5 text-left">
-        <!-- Add content here for the left side -->
-        <p>Template GIF goes here</p>
+      <div class="col-md-5 d-flex justify-content-start align-items-center">
+        <%= image_tag "Trophy_made Home Page.png", class: "img-fluid", alt: "TrophyMade Home Page Template", style: "max-width: 70%; height: auto;" %>
       </div>
 
       <!-- Right div -->
@@ -109,9 +108,8 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-md-6">
-        <h4 class="fw-bold">Create your award with TrophyMaker</h4>
-        <p>Upload your logo, add text, select fonts and sizes – all within our easy editor.</p>
-        <%= link_to "Learn More", "#", class: "btn btn-outline-primary" %>
+        <h4 class="fw-bold" style="line-height: 1.6;">Personalize every trophy and award to suit your needs. Create your own custom design using our simple online tool, TrophyMaker.</h4><br>
+        <p style="line-height: 1.6;">Choose your award, add text, edit the details and decide how it should look. The best part? Get a real-time preview of your custom award's design, approve it immediately, and place your order..</p>
       </div>
       <div class="col-md-6 text-center">
         <%= image_tag "trophy-maker-preview.webp", class: "img-fluid", alt: "TrophyMaker example" %>
@@ -125,10 +123,14 @@
   <div class="container">
     <h2 class="section-title">Customer Reviews</h2>
     <div class="row justify-content-center">
-      <% ["Perfect finish!", "Fast & reliable.", "Flawless service."].each_with_index do |review, i| %>
+      <% [
+        ["Trophymade was fast and efficient with my order! I put in an order very last minute and it arrived in time! The trophies that I also ordered are amazing quality! Lastly, the communication with this company is very professional!", "Chris Greppmayr"],
+        ["Awesome customer service and their website is really easy to use. The trophies turned out really well, would definitely order from here again.", "Jake Dodds"],
+        ["Excellent experience. They took the time to confirm the details of the inscription (which I had screwed up) and everything turned out great. Daughter loved it. Thanks so much.", "Kelly Fifield"]
+      ].each do |review, name| %>
         <div class="col-md-3">
-          <p class="quote">“<%= review %>”</p>
-          <p class="name">– Customer <%= i + 1 %></p>
+          <p class="quote">"<%= review %>"</p>
+          <p class="name">– <%= name %></p>
         </div>
       <% end %>
     </div>
